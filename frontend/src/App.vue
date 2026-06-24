@@ -249,38 +249,4 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .banner{position:relative;background-size:cover;background-position:center;border-radius:14px;overflow:hidden;min-height:100px}
 .banner-mask{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,23,42,.8),rgba(15,23,42,.4))}
 .banner-body{position:relative;z-index:2;padding:28px 32px}
-.banner-hl{font-size:15px;font-weight:700;color:#fff;display:block;margin-bottom:6px}
-.banner-p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;margin:0;max-width:600px}
-
-/* Panels */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.panel{background:#fff;border:1px solid rgba(0,0,0,.05);border-radius:14px;overflow:hidden;transition:all .2s}
-.panel:hover{border-color:rgba(0,0,0,.08);box-shadow:0 4px 24px rgba(0,0,0,.04)}
-.panel-hd{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px 0}
-.panel-title{font-size:15px;font-weight:600;color:#0f172a}
-.panel-desc{font-size:12px;color:#94a3b8;margin:3px 0 0;line-height:1.5}
-.panel-bd{padding:8px 0}
-.tag{font-size:10px;font-weight:600;color:#64748b;background:#f1f5f9;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.tag-live{color:#16a34a;background:rgba(74,222,128,.12)}
-
-/* Footer */
-.footer{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-top:1px solid rgba(0,0,0,.05);font-size:12px;color:#94a3b8}
-
-/* Floating filter */
-.floating-filter{position:fixed;top:20px;right:32px;z-index:200;max-width:440px}
-
-/* Back to top */
-.top-btn{position:fixed;bottom:32px;right:32px;z-index:300;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;transition:all .15s;font-family:inherit}
-.top-btn:hover{background:#f8fafc;color:#2563eb;transform:translateY(-2px)}
-.top-btn svg{width:18px;height:18px}
-
-@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-@media(max-width:768px){
-  .sidebar{display:none}.main{margin-left:0}
-  .kpi-row{grid-template-columns:1fr}
-  .hero-h1{font-size:26px}.hero-stats{flex-direction:column;gap:12px;align-items:flex-start}
-  .sep{display:none}
-  .content{padding:20px}.hero-body{padding:32px 24px}
-  .floating-filter{right:16px;left:16px;max-width:none}
-}
-</style>
+.ban

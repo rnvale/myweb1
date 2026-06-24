@@ -11,8 +11,6 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts'
 import http from '../http'
 
-echarts.use([echarts.PieChart, echarts.TooltipComponent, echarts.LegendComponent])
-
 const props = defineProps<{
   sentimentFilter: string
   aspectFilter: string
@@ -78,41 +76,4 @@ async function fetchData() {
         type: 'pie',
         roseType: 'area',
         radius: ['18%', '72%'],
-        center: ['38%', '52%'],
-        itemStyle: {
-          borderRadius: 8,
-          borderColor: '#fff',
-          borderWidth: 2
-        },
-        color: COLORS,
-        label: { color: '#64748b', fontSize: 10 },
-        data: pieData
-      }]
-    })
-  } catch (e) {
-    console.error('RoseChart:', e)
-    noData.value = true
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(() => initChart())
-onUnmounted(() => chartInstance?.dispose())
-watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
-</script>
-
-<style scoped>
-.chart-container { width: 100%; height: 320px; position: relative; }
-.chart { width: 100%; height: 100%; }
-.chart-overlay {
-  position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 8px;
-  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
-}
-.spinner {
-  width: 20px; height: 20px; border: 2px solid #e2e8f0;
-  border-top-color: #0066FF; border-radius: 50%; animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
+        center:

@@ -10,8 +10,6 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts'
 import http from '../http'
 
-echarts.use([echarts.BarChart, echarts.LineChart, echarts.TooltipComponent, echarts.GridComponent, echarts.LegendComponent])
-
 const props = defineProps<{
   sentimentFilter: string
   aspectFilter: string
@@ -102,7 +100,4 @@ watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
 }
 .spinner {
   width: 20px; height: 20px; border: 2px solid #e2e8f0;
-  border-top-color: #0066FF; border-radius: 50%; animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
+  border-top-color: #0066FF; b

@@ -10,8 +10,6 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts'
 import http from '../http'
 
-echarts.use([echarts.HeatmapChart, echarts.TooltipComponent, echarts.GridComponent, echarts.VisualMapComponent])
-
 const props = defineProps<{
   sentimentFilter: string
   aspectFilter: string
@@ -94,35 +92,4 @@ async function fetchData() {
         data: heatmapData,
         label: {
           show: true, color: '#0f172a', fontSize: 11, fontWeight: 600,
-          formatter: (p: any) => (p.value[2] * 100).toFixed(0) + '%'
-        },
-        emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.1)' } },
-        itemStyle: { borderColor: '#fff', borderWidth: 2, borderRadius: 4 }
-      }]
-    })
-  } catch (e) {
-    console.error('EmotionHeatmap:', e)
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(() => initChart())
-onUnmounted(() => chartInstance?.dispose())
-watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
-</script>
-
-<style scoped>
-.chart-container { width: 100%; height: 380px; position: relative; }
-.chart { width: 100%; height: 100%; }
-.chart-overlay {
-  position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 8px;
-  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
-}
-.spinner {
-  width: 20px; height: 20px; border: 2px solid #e2e8f0;
-  border-top-color: #0066FF; border-radius: 50%; animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
+          formatter: (
