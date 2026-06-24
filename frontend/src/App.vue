@@ -1,9 +1,6 @@
 <template>
   <div class="app-root">
-    <!-- Ambient background decoration -->
     <div class="ambient"><div class="ambient-orb ambient-orb-1"></div><div class="ambient-orb ambient-orb-2"></div></div>
-
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="brand-check"><svg viewBox="0 0 32 32" fill="none"><rect x="2" y="2" width="28" height="28" rx="8" fill="#2563eb"/><path d="M10 16l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -15,55 +12,27 @@
           <span>{{ item.label }}</span>
         </button>
       </nav>
-      <div class="sidebar-foot"><div class="sf-label">数据源</div><div class="sf-value">AWARE &middot; 11,321 条评论</div></div>
+      <div class="sidebar-foot"><div class="sf-label">数据源</div><div class="sf-value">AWARE · 11,321 条评论</div></div>
     </aside>
-
-    <!-- Main -->
     <main class="main">
-
-      <!-- ======================== DASHBOARD ======================== -->
       <section v-if="view === 'dashboard'">
-        <div class="hero" style="background-image:url(/img/hero-analytics.jpg)">
-          <div class="hero-mask"></div>
-          <div class="hero-body">
-            <div class="hero-tag">概览</div>
-            <h1 class="hero-h1">App 智能分析仪表盘</h1>
-            <p class="hero-p">基于 AWARE 数据集对 11,321 条应用评论进行实时情感分析</p>
-            <div class="hero-stats">
-              <div class="hero-stat"><span class="hero-num">{{ anim.total }}</span><span class="hero-lbl">评论总数</span></div>
-              <div class="hero-stat sep"></div>
-              <div class="hero-stat"><span class="hero-num hero-grn">{{ anim.pos }}</span><span class="hero-lbl">正面</span></div>
-              <div class="hero-stat sep"></div>
-              <div class="hero-stat"><span class="hero-num hero-red">{{ anim.neg }}</span><span class="hero-lbl">负面</span></div>
-            </div>
-          </div>
-        </div>
-
+        <div class="hero" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">概览</div><h1 class="hero-h1">App 智能分析仪表盘</h1><p class="hero-p">基于 AWARE 数据集对 11,321 条应用评论进行实时情感分析</p><div class="hero-stats"><div class="hero-stat"><span class="hero-num">{{ anim.total }}</span><span class="hero-lbl">评论总数</span></div><div class="hero-stat sep"></div><div class="hero-stat"><span class="hero-num hero-grn">{{ anim.pos }}</span><span class="hero-lbl">正面</span></div><div class="hero-stat sep"></div><div class="hero-stat"><span class="hero-num hero-red">{{ anim.neg }}</span><span class="hero-lbl">负面</span></div></div></div></div>
         <div class="content">
-          <!-- KPI -->
           <div class="kpi-row">
             <div class="kpi-card"><div class="kpi-ico kpi-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h2m0 0h2m-2 0v2m0-2V9"/><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg></div><div class="kpi-body"><span class="kpi-label">平均评分</span><span class="kpi-val">3.8 <small>/ 5.0</small></span><div class="kpi-stars"><span v-for="n in 5" :key="n" class="star" :class="n <= 4 ? 'on' : ''">★</span></div></div></div>
             <div class="kpi-card"><div class="kpi-ico kpi-em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20"/></svg></div><div class="kpi-body"><span class="kpi-label">正面率</span><span class="kpi-val kpi-text-grn">{{ posPct }}<small>%</small></span><div class="bar"><div class="bar-fill bar-grn" :style="{width: posPct+'%'}"></div></div></div></div>
             <div class="kpi-card"><div class="kpi-ico kpi-org"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="kpi-body"><span class="kpi-label">方面类别</span><span class="kpi-val">12 <small>类</small></span><span class="kpi-sub">涵盖可用性、价格、性能等</span></div></div>
             <div class="kpi-card"><div class="kpi-ico kpi-purp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div class="kpi-body"><span class="kpi-label">数据来源</span><span class="kpi-val">AWARE</span><span class="kpi-sub">学术研究数据集 v2.1</span></div></div>
           </div>
-
-          <!-- Insight -->
-          <div class="insight"><div class="insight-dot"></div><div class="insight-body"><span class="insight-hl">情感快照</span><p class="insight-p">整体正面评论占比 <strong>{{ posPct }}%</strong>，其中娱乐性、美观性和整体评价类别正面率最高，而可靠性和价格类别的负面反馈较多，值得关注。</p></div></div>
-
-          <!-- Charts -->
+          <div class="insight"><div class="insight-dot"></div><div class="insight-body"><span class="insight-hl">情感快照</span><p class="insight-p">整体正面评论占比 <strong>{{ posPct }}%</strong>，其中娱乐性、美观性和整体评价类别正面率最高，而可靠性和价格类别的负面反馈较多。</p></div></div>
           <div class="grid-2">
             <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感仪表盘</h3><p class="panel-desc">正面评论占比实时监控</p></div><span class="tag tag-live">实时</span></div><div class="panel-bd"><SentimentGauge :sentiment-filter="sf" :aspect-filter="af"/></div></div>
             <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分情感分析</h3><p class="panel-desc">各星级评论的情感分布</p></div><span class="tag">分布</span></div><div class="panel-bd"><RatingSentiment :sentiment-filter="sf" :aspect-filter="af"/></div></div>
           </div>
-
           <div class="banner" style="background-image:url(/img/bg-data.jpg)"><div class="banner-mask"></div><div class="banner-body"><span class="banner-hl">领域对比分析</span><p class="banner-p">从生产力工具到娱乐应用，每个领域的情感模式截然不同——数据揭示了功能价值与情感体验之间的深层关联。</p></div></div>
-
           <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">各领域情感对比</h3><p class="panel-desc">不同App领域的正面率与评论量对比</p></div></div><div class="panel-bd"><DomainCompare :sentiment-filter="sf" :aspect-filter="af"/></div></div>
         </div>
       </section>
-
-      <!-- ======================== SENTIMENT ======================== -->
       <section v-if="view === 'sentiment'">
         <div class="hero hero-sm" style="background-image:url(/img/hero-charts.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">情感</div><h1 class="hero-h1">情感分析</h1><p class="hero-p">评分与方面的情感关联深度洞察</p></div></div>
         <div class="content">
@@ -77,8 +46,6 @@
           </div>
         </div>
       </section>
-
-      <!-- ======================== ASPECTS ======================== -->
       <section v-if="view === 'aspects'">
         <div class="hero hero-sm" style="background-image:url(/img/bg-data.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">挖掘</div><h1 class="hero-h1">方面挖掘</h1><p class="hero-p">评论中提及的方面类别分布与情感分析</p></div></div>
         <div class="content">
@@ -88,8 +55,6 @@
           </div>
         </div>
       </section>
-
-      <!-- ======================== RANKINGS ======================== -->
       <section v-if="view === 'rankings'">
         <div class="hero hero-sm" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">排行</div><h1 class="hero-h1">App 排行</h1><p class="hero-p">应用评分排行榜与竞争分析</p></div></div>
         <div class="content">
@@ -99,22 +64,15 @@
           </div>
         </div>
       </section>
-
-      <footer class="footer"><span>AppInsight v2.0 &mdash; 情感分析系统</span><span>数据来源: AWARE 数据集 &middot; 11,321 条评论</span></footer>
+      <footer class="footer"><span>AppInsight v2.0</span><span>AWARE · 11,321 条评论</span></footer>
     </main>
-
-    <!-- Floating filter -->
     <div class="floating-filter"><FilterBar v-model:sentimentFilter="sf" v-model:aspectFilter="af"/></div>
-
-    <!-- Back to top -->
-    <button v-if="showTop" class="top-btn" @click="window.scrollTo({top:0,behavior:'smooth'})">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
-    </button>
+    <button v-if="showTop" class="top-btn" @click="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import FilterBar from './components/FilterBar.vue'
 import SentimentGauge from './components/SentimentGauge.vue'
 import RatingSentiment from './components/RatingSentiment.vue'
@@ -139,10 +97,10 @@ const view = ref('dashboard')
 const sf = ref('全部')
 const af = ref('全部')
 const showTop = ref(false)
-
-const total = 11321, pos = 5310, neg = 5291
+const total = 11321
+const pos = 5310
+const neg = 5291
 const posPct = computed(() => ((pos / total) * 100).toFixed(1))
-
 const anim = reactive({ total: '0', pos: '0', neg: '0' })
 
 onMounted(() => {
@@ -155,34 +113,24 @@ onMounted(() => {
     if (p < 1) requestAnimationFrame(tick)
   }
   requestAnimationFrame(tick)
-
-  const onScroll = () => { showTop.value = window.scrollY > 400 }
-  window.addEventListener('scroll', onScroll)
+  window.addEventListener('scroll', () => { showTop.value = window.scrollY > 400 })
 })
-
-const win = window as any
 </script>
 
 <style>
-/* === GLOBAL === */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f5f7;color:#0f172a;-webkit-font-smoothing:antialiased}
-
-/* === LAYOUT === */
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f5f7;color:#0f172a;-webkit-font-smoothing:antialiased}
 .app-root{display:flex;min-height:100vh;position:relative}
-
 .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .ambient-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.25}
 .ambient-orb-1{width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,#2563eb,transparent 70%)}
 .ambient-orb-2{width:500px;height:500px;bottom:-150px;left:-150px;background:radial-gradient(circle,#7c3aed,transparent 70%)}
-
-/* Sidebar */
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-right:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;z-index:100}
 .sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 20px 18px;border-bottom:1px solid rgba(0,0,0,.04)}
 .brand-check{width:32px;height:32px;flex-shrink:0}
 .brand-check svg{width:100%;height:100%}
-.brand-text{display:flex;flex-direction:column}
+.brand-text{display:flex;flex-direction:column;gap:1px}
 .brand-name{font-size:17px;font-weight:700;letter-spacing:-.03em;line-height:1.2}
 .brand-ver{font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
 .nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px}
@@ -193,29 +141,21 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .sidebar-foot{padding:14px 20px;border-top:1px solid rgba(0,0,0,.04)}
 .sf-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;font-weight:600;margin-bottom:2px}
 .sf-value{font-size:12px;color:#475569;font-weight:500}
-
-/* Main */
 .main{flex:1;margin-left:220px;min-height:100vh;position:relative;z-index:1}
-
-/* Hero */
 .hero{position:relative;background-size:cover;background-position:center;display:flex;align-items:flex-end;overflow:hidden;min-height:340px}
 .hero-sm{min-height:200px}
 .hero-mask{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,23,42,.75),rgba(15,23,42,.2))}
 .hero-body{position:relative;z-index:2;padding:48px 40px;max-width:800px}
 .hero-tag{display:inline-block;padding:4px 10px;margin-bottom:14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);border-radius:6px;font-size:10px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:.06em}
 .hero-h1{font-size:38px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-.03em;margin-bottom:8px}
-.hero-p{font-size:15px;color:rgba(255,255,255,.65);font-weight:400;margin-bottom:28px;max-width:580px}
+.hero-p{font-size:15px;color:rgba(255,255,255,.65);margin-bottom:28px;max-width:580px}
 .hero-stats{display:flex;gap:28px;align-items:center}
 .hero-stat .hero-num{font-size:30px;font-weight:700;color:#fff;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .hero-grn{color:#4ade80}
 .hero-red{color:#f87171}
 .hero-lbl{display:block;font-size:11px;color:rgba(255,255,255,.45);font-weight:500;margin-top:2px}
 .sep{width:1px;height:36px;background:rgba(255,255,255,.12)}
-
-/* Content */
 .content{padding:28px 40px 48px;display:flex;flex-direction:column;gap:24px}
-
-/* KPI */
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .kpi-card{display:flex;gap:14px;background:#fff;border-radius:14px;padding:20px;border:1px solid rgba(0,0,0,.05);transition:all .2s}
 .kpi-card:hover{border-color:rgba(0,0,0,.08);box-shadow:0 4px 24px rgba(0,0,0,.04);transform:translateY(-2px)}
@@ -237,16 +177,30 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .bar{width:100%;height:4px;background:#f1f5f9;border-radius:2px;margin-top:8px;overflow:hidden}
 .bar-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
 .bar-grn{background:#16a34a}
-
-/* Insight */
 .insight{display:flex;gap:14px;align-items:flex-start;background:rgba(37,99,235,.03);border:1px solid rgba(37,99,235,.1);border-radius:12px;padding:18px 22px}
 .insight-dot{width:8px;height:8px;border-radius:50%;background:#2563eb;margin-top:5px;flex-shrink:0;box-shadow:0 0 8px rgba(37,99,235,.3)}
 .insight-hl{font-size:11px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px}
-.insight-p{font-size:14px;color:#475569;line-height:1.6;margin:0}
+.insight-p{font-size:14px;color:#475569;line-height:1.6;margin:0;font-weight:400}
 .insight-p strong{color:#0f172a}
-
-/* Banner */
 .banner{position:relative;background-size:cover;background-position:center;border-radius:14px;overflow:hidden;min-height:100px}
 .banner-mask{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,23,42,.8),rgba(15,23,42,.4))}
 .banner-body{position:relative;z-index:2;padding:28px 32px}
-.ban
+.banner-hl{font-size:15px;font-weight:700;color:#fff;display:block;margin-bottom:6px}
+.banner-p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;margin:0;max-width:600px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{background:#fff;border:1px solid rgba(0,0,0,.05);border-radius:14px;overflow:hidden;transition:all .2s}
+.panel:hover{border-color:rgba(0,0,0,.08);box-shadow:0 4px 24px rgba(0,0,0,.04)}
+.panel-hd{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px 0}
+.panel-title{font-size:15px;font-weight:600;color:#0f172a;margin:0}
+.panel-desc{font-size:12px;color:#94a3b8;margin:3px 0 0;line-height:1.5}
+.panel-bd{padding:8px 0}
+.tag{font-size:10px;font-weight:600;color:#64748b;background:#f1f5f9;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.tag-live{color:#16a34a;background:rgba(74,222,128,.12)}
+.footer{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-top:1px solid rgba(0,0,0,.05);font-size:12px;color:#94a3b8}
+.floating-filter{position:fixed;top:20px;right:32px;z-index:200;max-width:440px}
+.top-btn{position:fixed;bottom:32px;right:32px;z-index:300;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;transition:all .15s;font-family:inherit;font-size:14px}
+.top-btn:hover{background:#f8fafc;color:#2563eb;transform:translateY(-2px)}
+.top-btn svg{width:18px;height:18px}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.kpi-row{grid-template-columns:1fr}.hero-h1{font-size:26px}.hero-stats{flex-direction:column;gap:12px;align-items:flex-start}.sep{display:none}.content{padding:20px}.hero-body{padding:32px 24px}.floating-filter{right:16px;left:16px;max-width:none}}
+</style>
