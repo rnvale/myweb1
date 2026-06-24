@@ -6,9 +6,16 @@
     "strict": true,
     "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["src/**/*", "vite.config.*"]
+  "include": [
+    "src/**/*",
+    "vite.config.*"
+  ]
 }
