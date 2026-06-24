@@ -13,6 +13,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts'
 import 'echarts-wordcloud'
+import http from '../http'
 
 const chartRef = ref<HTMLElement | null>(null)
 const loading = ref(true)
@@ -34,12 +35,8 @@ const fetchDataAndDraw = async () => {
       sentiment: props.sentimentFilter === '全部' ? 'all' : props.sentimentFilter,
       category: props.aspectFilter === '全部' ? 'all' : props.aspectFilter
     }
-    const res = await fetch('https://myweb-bwk2.onrender.com/api/filtered_wordcloud', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(filters)
-    })
-    const data = await res.json()
+    const res = await http.post('/filtered_wordcloud', filters)
+    const data = res.data
     positiveWords = data.positive || []
     negativeWords = data.negative || []
     drawCurrentCloud()

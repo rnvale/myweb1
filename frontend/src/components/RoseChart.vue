@@ -12,6 +12,7 @@ import * as echarts from 'echarts/core'
 import { PieChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
+import http from '../http'
 
 echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer])
 
@@ -31,6 +32,13 @@ const COLORS = [
   '#14B8A6', '#A855F7'
 ]
 
+const LABEL_MAP: Record<string, string> = {
+  'usability': '可用性', 'general': '整体评价', 'effectiveness': '有效性',
+  'cost': '价格', 'compatibility': '兼容性', 'reliability': '可靠性',
+  'efficiency': '效率', 'security': '安全性', 'safety': '安全',
+  'enjoyability': '娱乐性', 'learnability': '易学性', 'aesthetics': '美观性'
+}
+
 function initChart() {
   if (!chartRef.value) return
   if (chartInstance) chartInstance.dispose()
@@ -43,22 +51,22 @@ async function fetchData() {
   loading.value = true
   noData.value = false
   try {
-    const res = await fetch('https://myweb-bwk2.onrender.com/api/aspect_sentiment')
-    const items = await res.json()
+    const res = await http.get('/aspect_sentiment')
+    const items = res.data
     if (!Array.isArray(items) || items.length === 0) {
       noData.value = true
       return
     }
 
     const pieData = items.map((item: any) => ({
-      name: item.aspect || item._id || 'Unknown',
+      name: LABEL_MAP[item.aspect] || item.aspect || '未知',
       value: (item.positive ?? 0) + (item.negative ?? 0)
     })).filter((d: any) => d.value > 0)
 
     chartInstance.setOption({
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: {c} ({d}%)',
+        formatter: '{b}: {c} 条 ({d}%)',
         backgroundColor: 'rgba(255,255,255,0.95)',
         borderColor: '#e2e8f0',
         textStyle: { color: '#0f172a' }
@@ -67,7 +75,7 @@ async function fetchData() {
         orient: 'vertical',
         right: 8,
         top: 'center',
-        textStyle: { color: '#475569', fontSize: 10 }
+        textStyle: { color: '#64748b', fontSize: 10 }
       },
       series: [{
         type: 'pie',
@@ -80,7 +88,7 @@ async function fetchData() {
           borderWidth: 2
         },
         color: COLORS,
-        label: { color: '#475569', fontSize: 10 },
+        label: { color: '#64748b', fontSize: 10 },
         data: pieData
       }]
     })

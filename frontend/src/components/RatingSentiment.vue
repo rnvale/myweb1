@@ -1,15 +1,17 @@
 <template>
   <div class="chart-container">
     <div ref="chartRef" class="chart"></div>
+    <div v-if="loading" class="chart-overlay"><div class="spinner"></div><span>加载图表</span></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts/core'
 import { BarChart, LineChart } from 'echarts/charts'
 import { TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
+import http from '../http'
 
 echarts.use([BarChart, LineChart, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer])
 
@@ -19,6 +21,7 @@ const props = defineProps<{
 }>()
 
 const chartRef = ref<HTMLElement>()
+const loading = ref(true)
 let chartInstance: echarts.ECharts | null = null
 
 function initChart() {
@@ -29,15 +32,11 @@ function initChart() {
 
 async function fetchData() {
   if (!chartInstance) return
+  loading.value = true
   try {
-    const res = await fetch(`https://myweb-bwk2.onrender.com/api/rating_sentiment`)
-    const data = await res.json()
-
-    // Backend returns array: [{rating, positive, negative, positive_rate, total}]
-    if (!Array.isArray(data)) {
-      chartInstance.setOption({ backgroundColor: '#ffffff' })
-      return
-    }
+    const res = await http.get('/rating_sentiment')
+    const data = res.data
+    if (!Array.isArray(data)) { loading.value = false; return }
 
     const ratings = data.map((item: any) => `${item.rating} 星`)
     const positives = data.map((item: any) => item.positive ?? 0)
@@ -55,13 +54,12 @@ async function fetchData() {
       legend: {
         data: ['正面评论', '负面评论', '总计'],
         top: 0,
-        textStyle: { color: '#475569', fontSize: 12 }
+        textStyle: { color: '#64748b', fontSize: 12 }
       },
       grid: { left: '3%', right: '4%', bottom: '3%', top: '15%', containLabel: true },
       xAxis: {
-        type: 'category',
-        data: ratings,
-        axisLabel: { color: '#475569', fontWeight: 500 },
+        type: 'category', data: ratings,
+        axisLabel: { color: '#64748b', fontWeight: 500 },
         axisLine: { lineStyle: { color: '#e2e8f0' } }
       },
       yAxis: {
@@ -71,41 +69,43 @@ async function fetchData() {
       },
       series: [
         {
-          name: '正面评论',
-          type: 'bar',
-          stack: 'sentiment',
-          data: positives,
-          itemStyle: { color: '#16a34a', borderRadius: [4, 4, 0, 0] },
-          barWidth: '50%'
+          name: '正面评论', type: 'bar', stack: 'sentiment', data: positives,
+          itemStyle: { color: '#16a34a', borderRadius: [4, 4, 0, 0] }, barWidth: '50%'
         },
         {
-          name: '负面评论',
-          type: 'bar',
-          stack: 'sentiment',
-          data: negatives,
+          name: '负面评论', type: 'bar', stack: 'sentiment', data: negatives,
           itemStyle: { color: '#dc2626', borderRadius: [0, 0, 4, 4] }
         },
         {
-          name: '总计',
-          type: 'line',
-          data: totals,
-          lineStyle: { color: '#2563eb', width: 2 },
-          itemStyle: { color: '#2563eb' },
-          symbol: 'circle',
-          symbolSize: 6
+          name: '总计', type: 'line', data: totals,
+          lineStyle: { color: '#0066FF', width: 2 },
+          itemStyle: { color: '#0066FF' }, symbol: 'circle', symbolSize: 6
         }
       ]
     })
   } catch (e) {
-    console.error('RatingSentiment fetch error:', e)
+    console.error('RatingSentiment:', e)
+  } finally {
+    loading.value = false
   }
 }
 
 onMounted(() => initChart())
+onUnmounted(() => chartInstance?.dispose())
 watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
 </script>
 
 <style scoped>
-.chart-container { width: 100%; height: 300px; }
+.chart-container { width: 100%; height: 300px; position: relative; }
 .chart { width: 100%; height: 100%; }
+.chart-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
+}
+.spinner {
+  width: 20px; height: 20px; border: 2px solid #e2e8f0;
+  border-top-color: #0066FF; border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>

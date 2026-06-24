@@ -1,6 +1,7 @@
 <template>
   <div class="chart-container">
     <div ref="chartRef" class="chart"></div>
+    <div v-if="loading" class="chart-overlay"><div class="spinner"></div><span>加载仪表盘</span></div>
   </div>
 </template>
 
@@ -10,6 +11,7 @@ import * as echarts from 'echarts/core'
 import { GaugeChart } from 'echarts/charts'
 import { TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
+import http from '../http'
 
 echarts.use([GaugeChart, TooltipComponent, CanvasRenderer])
 
@@ -19,6 +21,7 @@ const props = defineProps<{
 }>()
 
 const chartRef = ref<HTMLElement>()
+const loading = ref(true)
 let chartInstance: echarts.ECharts | null = null
 
 function initChart() {
@@ -29,18 +32,17 @@ function initChart() {
 
 async function fetchData() {
   if (!chartInstance) return
+  loading.value = true
   try {
-    const params = new URLSearchParams()
-    if (props.sentimentFilter && props.sentimentFilter !== '全部') params.append('sentiment', props.sentimentFilter)
-    if (props.aspectFilter && props.aspectFilter !== '全部') params.append('aspect', props.aspectFilter)
+    const params: Record<string, string> = {}
+    if (props.sentimentFilter && props.sentimentFilter !== '全部') params.sentiment = props.sentimentFilter
+    if (props.aspectFilter && props.aspectFilter !== '全部') params.aspect = props.aspectFilter
 
-    const res = await fetch(`https://myweb-bwk2.onrender.com/api/summary?${params}`)
-    const data = await res.json()
+    const res = await http.get('/summary', { params })
+    const data = res.data
 
-    // Backend returns: {sentiment: {positive: N, negative: N}}
-    const sentiment = data.sentiment || {}
-    const positive = sentiment.positive ?? 0
-    const negative = sentiment.negative ?? 0
+    const positive = data.sentiment?.positive ?? 0
+    const negative = data.sentiment?.negative ?? 0
     const total = positive + negative
     const positiveRate = total > 0 ? ((positive / total) * 100) : 0
 
@@ -90,25 +92,31 @@ async function fetchData() {
           offsetCenter: [0, '50%']
         },
         data: [{ value: parseFloat(positiveRate.toFixed(1)), name: '正面率' }]
-      }],
-      tooltip: {
-        formatter: '正面率: {c}%',
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        borderColor: '#e2e8f0',
-        textStyle: { color: '#0f172a' }
-      }
+      }]
     })
   } catch (e) {
-    console.error('SentimentGauge fetch error:', e)
+    console.error('SentimentGauge:', e)
+  } finally {
+    loading.value = false
   }
 }
 
 onMounted(() => initChart())
-
+onUnmounted(() => chartInstance?.dispose())
 watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
 </script>
 
 <style scoped>
-.chart-container { width: 100%; height: 300px; }
+.chart-container { width: 100%; height: 300px; position: relative; }
 .chart { width: 100%; height: 100%; }
+.chart-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
+}
+.spinner {
+  width: 20px; height: 20px; border: 2px solid #e2e8f0;
+  border-top-color: #0066FF; border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
