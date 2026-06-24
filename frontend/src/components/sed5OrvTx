@@ -1,0 +1,102 @@
+<template>
+  <div class="rose-chart">
+    <div ref="chartRef" style="width: 100%; height: 420px;"></div>
+    <div v-if="loading" class="loading">加载中...</div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import * as echarts from 'echarts'
+import http from '../http'
+
+const chartRef = ref<HTMLElement | null>(null)
+const loading = ref(true)
+let chartInstance: any = null
+
+const fetchDataAndDraw = async () => {
+  if (!chartRef.value) return
+  loading.value = true
+  try {
+    const res = await http.get('/aspect_sentiment')
+    const data = res.data
+    drawChart(data)
+  } catch (error) {
+    console.error('获取数据失败:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const drawChart = (data: any[]) => {
+  if (!chartRef.value) return
+  if (chartInstance) { chartInstance.dispose() }
+  const chart = echarts.init(chartRef.value)
+
+  const option = {
+    backgroundColor: '#ffffff',
+    title: {
+      text: '方面类别评论数量分布',
+      left: 'center', top: 6,
+      textStyle: { fontSize: 15, fontWeight: 600, color: '#0f172a' }
+    },
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      textStyle: { color: '#334155', fontSize: 12 },
+      formatter: '{b}<br/>评论数: {c} ({d}%)',
+      extraCssText: 'box-shadow: 0 4px 16px rgba(0,0,0,0.08);'
+    },
+    legend: {
+      bottom: 8,
+      textStyle: { color: '#64748b', fontSize: 11 },
+      itemWidth: 14, itemHeight: 10, itemGap: 12
+    },
+    series: [{
+      type: 'pie',
+      radius: ['12%', '65%'],
+      center: ['50%', '52%'],
+      roseType: 'area',
+      itemStyle: {
+        borderRadius: 6,
+        borderColor: '#ffffff',
+        borderWidth: 2
+      },
+      label: {
+        color: '#64748b',
+        fontSize: 11,
+        formatter: '{b}\n{d}%'
+      },
+      labelLine: { lineStyle: { color: '#e2e8f0' } },
+      emphasis: {
+        label: { color: '#0f172a', fontWeight: 600, fontSize: 12 },
+        itemStyle: { shadowBlur: 16, shadowColor: 'rgba(0,0,0,0.12)' }
+      },
+      data: data.map((d: any, i: number) => ({
+        name: d.category || `类别${i + 1}`,
+        value: d.total || 0,
+        itemStyle: {
+          color: [
+            '#3b82f6', '#8b5cf6', '#ec4899', '#10b981',
+            '#f59e0b', '#ef4444', '#06b6d4', '#a78bfa',
+            '#34d399', '#fbbf24', '#60a5fa', '#f472b6',
+            '#22d3ee', '#c084fc', '#4ade80', '#fb923c'
+          ][i % 16]
+        }
+      }))
+    }]
+  }
+
+  chart.setOption(option)
+}
+
+onMounted(() => { fetchDataAndDraw() })
+onUnmounted(() => { if (chartInstance) { chartInstance.dispose() } })
+</script>
+
+<style scoped>
+.rose-chart { width: 100%; min-height: 420px; }
+.loading { text-align: center; padding: 50px; color: #94a3b8; }
+</style>
