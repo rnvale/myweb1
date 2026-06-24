@@ -1,260 +1,336 @@
 <template>
-  <div class="app">
+  <div class="app-shell">
+
+    <!-- ====== SIDEBAR ====== -->
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="logo">
-          <svg class="logo-icon" viewBox="0 0 28 28" fill="none">
-            <rect x="2" y="2" width="24" height="24" rx="6" fill="var(--accent)" fill-opacity="0.12"/>
-            <path d="M8 14l3 3 5-6" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 10v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2H8a2 2 0 00-2 2z" stroke="var(--accent)" stroke-width="1.5" fill="var(--accent)" fill-opacity="0.08"/>
+      <div class="sidebar-brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect x="2" y="2" width="28" height="28" rx="8" fill="currentColor"/>
+            <path d="M10 16l4 4 8-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span class="logo-text">AppInsight</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">AppInsight</span>
+          <span class="brand-ver">v2.0</span>
         </div>
       </div>
 
-      <nav class="nav">
-        <router-link
+      <nav class="nav-list">
+        <button
           v-for="item in navItems"
-          :key="item.name"
-          :to="item.path"
-          class="nav-item"
-          :class="{ active: currentSection === item.name }"
-          @click="currentSection = item.name"
+          :key="item.id"
+          class="nav-btn"
+          :class="{ active: activeView === item.id }"
+          @click="activeView = item.id"
         >
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path :d="item.icon" />
-          </svg>
-          <span class="nav-text">{{ item.name }}</span>
-        </router-link>
+          <svg class="nav-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path :d="item.icon"/></svg>
+          <span>{{ item.label }}</span>
+        </button>
       </nav>
 
-      <div class="sidebar-footer">
-        <div class="footer-stats">
-          <span class="footer-stat-label">数据源</span>
-          <span class="footer-stat-value">AWARE 数据集</span>
+      <div class="sidebar-foot">
+        <div class="side-info">
+          <span class="side-info-label">Dataset</span>
+          <span class="side-info-value">AWARE &middot; 11.3k</span>
         </div>
       </div>
     </aside>
 
-    <div class="main">
-      <header class="main-header">
-        <FilterBar
-          v-model:sentimentFilter="sentimentFilter"
-          v-model:aspectFilter="aspectFilter"
-        />
-      </header>
+    <!-- ====== MAIN ====== -->
+    <main class="main-area">
 
-      <div class="content">
-        <!-- Dashboard -->
-        <section v-if="currentSection === '总览仪表盘'" class="section">
-          <div class="section-heading">
-            <div>
-              <h2 class="section-title">总览仪表盘</h2>
-              <p class="section-desc">全局数据概览与核心指标</p>
+      <!-- ===================== DASHBOARD ===================== -->
+      <section v-if="activeView === 'dashboard'" class="page">
+
+        <!-- Hero -->
+        <div class="hero hero-lg" style="background-image: url(/img/hero-analytics.jpg);">
+          <div class="hero-curtain"></div>
+          <div class="hero-body">
+            <div class="hero-tag">Overview</div>
+            <h1 class="hero-h1">App Intelligence Dashboard</h1>
+            <p class="hero-p">Real-time sentiment analysis across 11,321 app store reviews from the AWARE dataset.</p>
+            <div class="hero-statbar">
+              <div class="hero-stat">
+                <span class="hero-stat-num">{{ anim.total }}</span>
+                <span class="hero-stat-lbl">Reviews</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-num hero-stat-green">{{ anim.pos }}</span>
+                <span class="hero-stat-lbl">Positive</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-num hero-stat-red">{{ anim.neg }}</span>
+                <span class="hero-stat-lbl">Negative</span>
+              </div>
             </div>
-            <span class="section-badge">{{ totalComments }} 条评论</span>
           </div>
+        </div>
 
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap kpi-icon-blue">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 12h2m0 0h2m-2 0v2m0-2V9m-3 12h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div class="kpi-body">
-                <span class="kpi-label">总评论数</span>
-                <div class="kpi-value">{{ totalComments }}</div>
-                <span class="kpi-desc">AWARE 数据集</span>
-              </div>
-            </div>
+        <div class="page-content">
 
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap kpi-icon-green">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905a3.61 3.61 0 01-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                </svg>
+          <!-- KPI with progress -->
+          <div class="kpi-strip">
+            <div class="kpi-tile">
+              <div class="kpi-tile-icon blue-glow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h2m0 0h2m-2 0v2m0-2V9"/><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
               </div>
-              <div class="kpi-body">
-                <span class="kpi-label">正面评论</span>
-                <div class="kpi-value kpi-positive">{{ positiveComments }}</div>
-                <span class="kpi-desc">占比 {{ positivePercentage }}%</span>
-              </div>
-            </div>
-
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap kpi-icon-red">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905a3.61 3.61 0 01.608-2.006l1.99-4A2 2 0 0014.5 10h-4.5m-3 0h2m-2 0v2" />
-                </svg>
-              </div>
-              <div class="kpi-body">
-                <span class="kpi-label">负面评论</span>
-                <div class="kpi-value kpi-negative">{{ negativeComments }}</div>
-                <span class="kpi-desc">占比 {{ negativePercentage }}%</span>
-              </div>
-            </div>
-
-            <div class="kpi-card">
-              <div class="kpi-icon-wrap kpi-icon-yellow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
-              </div>
-              <div class="kpi-body">
-                <span class="kpi-label">平均评分</span>
-                <div class="kpi-value">{{ averageRating }}<span class="kpi-unit">/5.0</span></div>
-                <div class="kpi-stars">
-                  <span v-for="n in 5" :key="n" class="star" :class="{ active: n <= Math.round(averageRating) }">★</span>
+              <div class="kpi-tile-body">
+                <span class="kpi-tile-lbl">Average Rating</span>
+                <span class="kpi-tile-val">{{ avgRating }} <small>/ 5.0</small></span>
+                <div class="kpi-tile-stars">
+                  <span v-for="n in 5" :key="n" class="star-i" :class="n <= Math.round(avgRating) ? 'star-on' : 'star-off'">☆</span>
                 </div>
               </div>
             </div>
+            <div class="kpi-tile">
+              <div class="kpi-tile-icon green-glow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20"/></svg>
+              </div>
+              <div class="kpi-tile-body">
+                <span class="kpi-tile-lbl">Positive Rate</span>
+                <span class="kpi-tile-val kpi-tile-green">{{ posPct }}<small>%</small></span>
+                <div class="mini-bar"><div class="mini-bar-fill green-fill" :style="{ width: posPct + '%' }"></div></div>
+              </div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-tile-icon orange-glow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div class="kpi-tile-body">
+                <span class="kpi-tile-lbl">Categories</span>
+                <span class="kpi-tile-val">12</span>
+                <span class="kpi-tile-sub">Aspect categories</span>
+              </div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-tile-icon purple-glow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </div>
+              <div class="kpi-tile-body">
+                <span class="kpi-tile-lbl">Data Source</span>
+                <span class="kpi-tile-val">AWARE</span>
+                <span class="kpi-tile-sub">v2.1 dataset</span>
+              </div>
+            </div>
           </div>
 
-          <div class="chart-grid">
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">情感仪表盘</h3>
-                <span class="chart-card-tag">实时分析</span>
-              </div>
-              <SentimentGauge :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+          <!-- Insight callout -->
+          <div class="insight-callout">
+            <div class="insight-dot"></div>
+            <div class="insight-body">
+              <span class="insight-label">Sentiment Snapshot</span>
+              <p class="insight-text">Across all categories, <strong>{{ posPct }}%</strong> of reviews express positive sentiment. The highest-rated categories are usability and aesthetics, while pricing and compatibility show mixed patterns.</p>
             </div>
+          </div>
 
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">评分情感分析</h3>
-                <span class="chart-card-tag">分布趋势</span>
+          <!-- Chart row 1 -->
+          <div class="grid-2col">
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Sentiment Gauge</h3>
+                  <p class="viz-desc">Overall positive-to-negative ratio across all reviews</p>
+                </div>
+                <span class="viz-badge live-badge">Live</span>
               </div>
-              <RatingSentiment :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              <div class="viz-body" style="padding:0 12px;">
+                <SentimentGauge :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
             </div>
-
-            <div class="chart-card chart-card-full">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">领域对比</h3>
-                <span class="chart-card-tag">多维度</span>
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Rating & Sentiment</h3>
+                  <p class="viz-desc">Stacked bar chart showing sentiment per star rating</p>
+                </div>
+                <span class="viz-badge">Distribution</span>
               </div>
+              <div class="viz-body">
+                <RatingSentiment :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Insight callout 2 with bg image -->
+          <div class="insight-wide" style="background-image: url(/img/bg-data.jpg);">
+            <div class="insight-wide-curtain"></div>
+            <div class="insight-wide-body">
+              <span class="insight-wide-hl">Domain Comparison</span>
+              <p class="insight-wide-p">Explore how sentiment varies across different app domains — from productivity tools to entertainment apps. The data reveals distinct emotional patterns tied to each domain's core use case.</p>
+            </div>
+          </div>
+
+          <!-- Chart row full -->
+          <div class="viz-card">
+            <div class="viz-head">
+              <div>
+                <h3 class="viz-title">Domain Comparison</h3>
+                <p class="viz-desc">Cross-domain sentiment and positive rate analysis</p>
+              </div>
+            </div>
+            <div class="viz-body">
               <DomainCompare :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
             </div>
           </div>
-        </section>
 
-        <!-- Sentiment -->
-        <section v-if="currentSection === '情感分析'" class="section">
-          <div class="section-heading">
-            <div>
-              <h2 class="section-title">情感分析</h2>
-              <p class="section-desc">各应用情感表现排名与对比</p>
+        </div>
+      </section>
+
+      <!-- ===================== SENTIMENT ===================== -->
+      <section v-if="activeView === 'sentiment'" class="page">
+        <div class="hero hero-sm" style="background-image: url(/img/hero-charts.jpg);">
+          <div class="hero-curtain"></div>
+          <div class="hero-body">
+            <div class="hero-tag">Sentiment</div>
+            <h1 class="hero-h1">Sentiment Analysis</h1>
+            <p class="hero-p">Deep dive into emotional patterns across ratings and categories</p>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="grid-2col">
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Emotion Heatmap</h3>
+                  <p class="viz-desc">Rating vs category sentiment matrix — higher is better</p>
+                </div>
+              </div>
+              <div class="viz-body">
+                <EmotionHeatmap :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
+            </div>
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">3D Aspect Comparison</h3>
+                  <p class="viz-desc">Multi-dimensional bubble chart — size = volume, color = sentiment</p>
+                </div>
+              </div>
+              <div class="viz-body">
+                <BubbleChart3D :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
             </div>
           </div>
-
-          <div class="chart-grid">
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">评分-方面情感热力图</h3>
-                <span class="chart-card-tag">关联分析</span>
+          <div class="grid-2col">
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Review Length Correlation</h3>
+                  <p class="viz-desc">Does review length relate to sentiment? Short reviews trend positive, long ones reveal nuance.</p>
+                </div>
               </div>
-              <EmotionHeatmap :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              <div class="viz-body">
+                <LengthAnalysisChart :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
             </div>
-
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">3D气泡图</h3>
-                <span class="chart-card-tag">立体对比</span>
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Word Cloud</h3>
+                  <p class="viz-desc">Most frequent terms in positive vs negative reviews</p>
+                </div>
               </div>
-              <BubbleChart3D :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
-            </div>
-
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">评论长度关联分析</h3>
-                <span class="chart-card-tag">文本挖掘</span>
+              <div class="viz-body">
+                <WordCloud :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
               </div>
-              <LengthAnalysisChart :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
-            </div>
-
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">高频词云</h3>
-                <span class="chart-card-tag">关键词提取</span>
-              </div>
-              <WordCloud :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- Aspect -->
-        <section v-if="currentSection === '方面挖掘'" class="section">
-          <div class="section-heading">
-            <div>
-              <h2 class="section-title">方面挖掘</h2>
-              <p class="section-desc">评论中提及的方面类别分布与情感</p>
-            </div>
+      <!-- ===================== ASPECTS ===================== -->
+      <section v-if="activeView === 'aspects'" class="page">
+        <div class="hero hero-sm" style="background-image: url(/img/bg-data.jpg);">
+          <div class="hero-curtain"></div>
+          <div class="hero-body">
+            <div class="hero-tag">Aspects</div>
+            <h1 class="hero-h1">Aspect Category Mining</h1>
+            <p class="hero-p">Category-level distribution and sentiment breakdown</p>
           </div>
-
-          <div class="chart-grid">
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">玫瑰图 — 方面评论数量分布</h3>
-                <span class="chart-card-tag">占比分析</span>
+        </div>
+        <div class="page-content">
+          <div class="grid-2col">
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Aspect Rose Chart</h3>
+                  <p class="viz-desc">Category volume distribution — wider petals = more reviews</p>
+                </div>
               </div>
-              <RoseChart :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
-            </div>
-
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">热门App情感对比</h3>
-                <span class="chart-card-tag">时间趋势</span>
+              <div class="viz-body">
+                <RoseChart :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
               </div>
-              <TopAppsChart :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
             </div>
-          </div>
-        </section>
-
-        <!-- Ranking -->
-        <section v-if="currentSection === 'App排行'" class="section">
-          <div class="section-heading">
-            <div>
-              <h2 class="section-title">App排行</h2>
-              <p class="section-desc">各应用情感表现排名与对比</p>
-            </div>
-          </div>
-
-          <div class="chart-grid">
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">App评分排行榜</h3>
-                <span class="chart-card-tag">Top 10</span>
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Top Apps Sentiment</h3>
+                  <p class="viz-desc">Sentiment breakdown for the most-reviewed applications</p>
+                </div>
               </div>
-              <AppRatings :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
-            </div>
-
-            <div class="chart-card">
-              <div class="chart-card-header">
-                <h3 class="chart-card-title">App四象限分析图</h3>
-                <span class="chart-card-tag">综合评价</span>
+              <div class="viz-body">
+                <TopAppsChart :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
               </div>
-              <QuadrantScatter :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <footer class="footer">
-          <div class="footer-left">
-            <span>AppInsight 情感分析系统</span>
+      <!-- ===================== RANKINGS ===================== -->
+      <section v-if="activeView === 'rankings'" class="page">
+        <div class="hero hero-sm" style="background-image: url(/img/hero-analytics.jpg);">
+          <div class="hero-curtain"></div>
+          <div class="hero-body">
+            <div class="hero-tag">Rankings</div>
+            <h1 class="hero-h1">App Rankings</h1>
+            <p class="hero-p">Leaderboard and competitive analysis</p>
           </div>
-          <div class="footer-right">
-            <span>数据来源：AWARE 数据集</span>
-            <span class="footer-dot">·</span>
-            <span>{{ totalComments }} 条评论</span>
+        </div>
+        <div class="page-content">
+          <div class="grid-2col">
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Rating Leaderboard</h3>
+                  <p class="viz-desc">Top 12 apps ranked by average user rating</p>
+                </div>
+              </div>
+              <div class="viz-body">
+                <AppRatings :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
+            </div>
+            <div class="viz-card">
+              <div class="viz-head">
+                <div>
+                  <h3 class="viz-title">Quadrant Analysis</h3>
+                  <p class="viz-desc">Rating vs volume — identifies stars, potentials, and risks</p>
+                </div>
+              </div>
+              <div class="viz-body">
+                <QuadrantScatter :sentiment-filter="sentimentFilter" :aspect-filter="aspectFilter" />
+              </div>
+            </div>
           </div>
-        </footer>
-      </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <span>AppInsight v2.0 &mdash; Sentiment Analysis System</span>
+        <span class="footer-right">Data: AWARE Dataset &middot; 11,321 reviews</span>
+      </footer>
+    </main>
+
+    <!-- Floating filter -->
+    <div class="filter-float">
+      <FilterBar v-model:sentimentFilter="sentimentFilter" v-model:aspectFilter="aspectFilter" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import FilterBar from './components/FilterBar.vue'
 import SentimentGauge from './components/SentimentGauge.vue'
 import RatingSentiment from './components/RatingSentiment.vue'
@@ -269,348 +345,222 @@ import AppRatings from './components/AppRatings.vue'
 import QuadrantScatter from './components/QuadrantScatter.vue'
 
 const navItems = [
-  { name: '总览仪表盘', path: '/', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { name: '情感分析', path: '/sentiment', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-  { name: '方面挖掘', path: '/aspect', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-  { name: 'App排行', path: '/ranking', icon: 'M9 5l7 7-7 7' }
+  { id: 'dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { id: 'sentiment', label: 'Sentiment', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { id: 'aspects', label: 'Aspects', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+  { id: 'rankings', label: 'Rankings', icon: 'M9 5l7 7-7 7' }
 ]
 
-const currentSection = ref('总览仪表盘')
+const activeView = ref('dashboard')
 const sentimentFilter = ref('全部')
 const aspectFilter = ref('全部')
 
-const totalComments = 11321
-const positiveComments = 5310
-const negativeComments = 5291
-const averageRating = 3.8
+const totalReviews = 11321
+const positiveCount = 5310
+const negativeCount = 5291
+const avgRating = 3.8
 
-const positivePercentage = computed(() => ((positiveComments / totalComments) * 100).toFixed(1))
-const negativePercentage = computed(() => ((negativeComments / totalComments) * 100).toFixed(1))
+const posPct = computed(() => ((positiveCount / totalReviews) * 100).toFixed(1))
+const negPct = computed(() => ((negativeCount / totalReviews) * 100).toFixed(1))
+
+const anim = reactive({ total: '0', pos: '0', neg: '0' })
+
+onMounted(() => {
+  const dur = 1600
+  const t0 = performance.now()
+
+  function tick() {
+    const p = Math.min((performance.now() - t0) / dur, 1)
+    const e = 1 - Math.pow(1 - p, 3)
+    anim.total = Math.round(e * totalReviews).toLocaleString()
+    anim.pos = Math.round(e * positiveCount).toLocaleString()
+    anim.neg = Math.round(e * negativeCount).toLocaleString()
+    if (p < 1) requestAnimationFrame(tick)
+  }
+  requestAnimationFrame(tick)
+})
 </script>
 
 <style scoped>
-.app {
+/* ====== BASE ====== */
+.app-shell {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-body);
+  background: #f5f5f7;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #0f172a;
 }
 
-/* ====== Sidebar ====== */
+/* ====== SIDEBAR ====== */
 .sidebar {
-  width: var(--sidebar-width);
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  height: 100vh;
-  z-index: 100;
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 220px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(0,0,0,0.05);
+  display: flex; flex-direction: column; z-index: 100;
+}
+.sidebar-brand {
+  display: flex; align-items: center; gap: 12px;
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.brand-mark {
+  width: 32px; height: 32px; color: #0066FF; flex-shrink: 0;
+}
+.brand-mark svg { width: 100%; height: 100%; }
+.brand-text { display: flex; flex-direction: column; gap: 1px; }
+.brand-name { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
+.brand-ver { font-size: 10px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.nav-list {
+  flex: 1; padding: 14px 10px; display: flex; flex-direction: column; gap: 3px;
+}
+.nav-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border: none; background: transparent; border-radius: 10px;
+  color: #64748b; font-size: 14px; font-weight: 500; cursor: pointer;
+  transition: all 0.15s ease; text-align: left; width: 100%; font-family: inherit;
+}
+.nav-btn:hover { background: rgba(0,102,255,0.06); color: #0f172a; }
+.nav-btn.active { background: rgba(0,102,255,0.1); color: #0066FF; font-weight: 600; }
+.nav-btn-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+.sidebar-foot { padding: 14px 20px; border-top: 1px solid rgba(0,0,0,0.04); }
+.side-info { display: flex; flex-direction: column; gap: 1px; }
+.side-info-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; font-weight: 600; }
+.side-info-value { font-size: 12px; color: #475569; font-weight: 500; }
+
+/* ====== MAIN ====== */
+.main-area { flex: 1; margin-left: 220px; min-height: 100vh; }
+
+/* ====== HERO ====== */
+.hero {
+  position: relative; background-size: cover; background-position: center;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.hero-lg { min-height: 340px; }
+.hero-sm { min-height: 200px; }
+.hero-curtain {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(15,23,42,0.25) 100%);
+}
+.hero-body { position: relative; z-index: 2; padding: 48px 40px; max-width: 800px; }
+.hero-tag {
+  display: inline-block; padding: 3px 10px; margin-bottom: 14px;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px; font-size: 10px; font-weight: 600; color: white;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.hero-h1 { font-size: 38px; font-weight: 700; color: white; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 8px; }
+.hero-p { font-size: 15px; color: rgba(255,255,255,0.65); font-weight: 400; margin-bottom: 28px; max-width: 580px; }
+.hero-statbar { display: flex; gap: 32px; }
+.hero-stat-num { font-size: 30px; font-weight: 700; color: white; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.hero-stat-green { color: #4ADE80; }
+.hero-stat-red { color: #F87171; }
+.hero-stat-lbl { display: block; font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 500; margin-top: 2px; }
+
+/* ====== PAGE CONTENT ====== */
+.page-content { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 28px; }
+
+/* ====== KPI STRIP ====== */
+.kpi-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.kpi-tile {
+  display: flex; gap: 14px; background: white; border-radius: 14px;
+  padding: 20px; border: 1px solid rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+.kpi-tile:hover { border-color: rgba(0,0,0,0.08); box-shadow: 0 4px 24px rgba(0,0,0,0.04); transform: translateY(-2px); }
+.kpi-tile-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kpi-tile-icon svg { width: 22px; height: 22px; }
+.blue-glow { background: rgba(0,102,255,0.1); color: #0066FF; }
+.green-glow { background: rgba(74,222,128,0.12); color: #16A34A; }
+.orange-glow { background: rgba(251,146,60,0.12); color: #EA580C; }
+.purple-glow { background: rgba(124,58,237,0.1); color: #7C3AED; }
+.kpi-tile-body { flex:1; min-width:0; }
+.kpi-tile-lbl { font-size: 11px; color: #94a3b8; font-weight: 500; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+.kpi-tile-val { font-size: 26px; font-weight: 700; color: #0f172a; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; display: block; }
+.kpi-tile-val small { font-size: 14px; font-weight: 500; color: #94a3b8; }
+.kpi-tile-green { color: #16A34A; }
+.kpi-tile-sub { font-size: 11px; color: #94a3b8; margin-top: 6px; display: block; }
+.kpi-tile-stars { display: flex; gap: 2px; margin-top: 6px; }
+.star-i { font-size: 16px; transition: color 0.2s; }
+.star-on { color: #F59E0B; }
+.star-off { color: #e2e8f0; }
+.mini-bar { width: 100%; height: 4px; background: #f1f5f9; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.mini-bar-fill { height: 100%; border-radius: 2px; transition: width 1.2s ease; }
+.green-fill { background: #16A34A; }
+
+/* ====== INSIGHT ====== */
+.insight-callout {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: rgba(0,102,255,0.03); border: 1px solid rgba(0,102,255,0.1);
+  border-radius: 12px; padding: 18px 22px;
+}
+.insight-dot { width: 8px; height: 8px; border-radius: 50%; background: #0066FF; margin-top: 5px; flex-shrink: 0; }
+.insight-label { font-size: 11px; font-weight: 600; color: #0066FF; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 4px; }
+.insight-text { font-size: 14px; color: #475569; line-height: 1.6; margin: 0; }
+.insight-text strong { color: #0f172a; }
+
+/* Large insight with bg */
+.insight-wide {
+  position: relative; background-size: cover; background-position: center;
+  border-radius: 14px; overflow: hidden; min-height: 120px;
+}
+.insight-wide-curtain {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(15,23,42,0.4) 100%);
+}
+.insight-wide-body { position: relative; z-index: 2; padding: 28px 32px; }
+.insight-wide-hl { font-size: 15px; font-weight: 700; color: white; display: block; margin-bottom: 6px; }
+.insight-wide-p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; margin: 0; max-width: 600px; }
+
+/* ====== VIZ CARDS ====== */
+.grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.viz-card {
+  background: white; border: 1px solid rgba(0,0,0,0.05); border-radius: 14px;
+  overflow: hidden; transition: all 0.2s ease;
+}
+.viz-card:hover { border-color: rgba(0,0,0,0.08); box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+.viz-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 20px 24px 0;
+}
+.viz-title { font-size: 15px; font-weight: 600; color: #0f172a; margin: 0; }
+.viz-desc { font-size: 12px; color: #94a3b8; margin: 3px 0 0; line-height: 1.5; }
+.viz-badge { font-size: 10px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+.live-badge { color: #16A34A; background: rgba(74,222,128,0.12); }
+.viz-body { padding: 8px 0; }
+
+/* ====== FOOTER ====== */
+.app-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 40px; border-top: 1px solid rgba(0,0,0,0.05);
+  font-size: 12px; color: #94a3b8;
 }
 
-.sidebar-header {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--border-subtle);
+/* ====== FILTER ====== */
+.filter-float {
+  position: fixed; top: 20px; right: 32px; z-index: 200; max-width: 440px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1100px) {
+  .kpi-strip { grid-template-columns: repeat(2,1fr); }
+  .grid-2col { grid-template-columns: 1fr; }
 }
-
-.logo-icon {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
-
-.logo-text {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.03em;
-}
-
-.nav {
-  flex: 1;
-  padding: 12px 8px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: all var(--transition-fast);
-  margin-bottom: 2px;
-}
-
-.nav-item:hover {
-  background: var(--accent-subtle);
-  color: var(--text-primary);
-}
-
-.nav-item.active {
-  background: var(--accent-subtle);
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.nav-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.nav-text {
-  font-size: 14px;
-}
-
-.sidebar-footer {
-  padding: 16px 20px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.footer-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.footer-stat-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.footer-stat-value {
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* ====== Main ====== */
-.main {
-  flex: 1;
-  margin-left: var(--sidebar-width);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-header {
-  padding: 20px 32px 0;
-}
-
-.content {
-  flex: 1;
-  padding: 24px 32px 40px;
-}
-
-/* ====== Section ====== */
-.section-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.section-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-}
-
-.section-desc {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-.section-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 14px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-/* ====== KPI Cards ====== */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.kpi-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  transition: all var(--transition-base);
-}
-
-.kpi-card:hover {
-  border-color: var(--border-default);
-  box-shadow: var(--shadow-md);
-}
-
-.kpi-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.kpi-icon-wrap svg {
-  width: 22px;
-  height: 22px;
-}
-
-.kpi-icon-blue { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
-.kpi-icon-green { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
-.kpi-icon-red { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
-.kpi-icon-yellow { background: rgba(217, 119, 6, 0.1); color: #d97706; }
-
-.kpi-body { flex: 1; min-width: 0; }
-
-.kpi-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.kpi-value {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.kpi-unit {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.kpi-positive { color: var(--positive); }
-.kpi-negative { color: var(--negative); }
-
-.kpi-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  display: block;
-}
-
-.kpi-stars {
-  display: flex;
-  gap: 2px;
-  margin-top: 6px;
-}
-
-.star {
-  font-size: 14px;
-  color: var(--border-strong);
-  transition: color var(--transition-fast);
-}
-
-.star.active {
-  color: #f59e0b;
-}
-
-/* ====== Chart Grid ====== */
-.chart-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.chart-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  transition: all var(--transition-base);
-}
-
-.chart-card:hover {
-  border-color: var(--border-default);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.chart-card-full {
-  grid-column: 1 / -1;
-}
-
-.chart-card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.chart-card-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.chart-card-tag {
-  font-size: 11px;
-  color: var(--accent);
-  background: var(--accent-subtle);
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-}
-
-/* ====== Footer ====== */
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 60px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-subtle);
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.footer-right { display: flex; align-items: center; gap: 8px; }
-.footer-dot { color: var(--border-default); }
-
-@media (max-width: 1200px) {
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .chart-grid { grid-template-columns: 1fr; }
-  .chart-card-full { grid-column: 1; }
-}
-
 @media (max-width: 768px) {
-  .kpi-grid { grid-template-columns: 1fr; }
-  .content { padding: 16px; }
-  .main-header { padding: 16px 16px 0; }
+  .sidebar { display: none; }
+  .main-area { margin-left: 0; }
+  .kpi-strip { grid-template-columns: 1fr; }
+  .hero-h1 { font-size: 26px; }
+  .hero-statbar { flex-direction: column; gap: 12px; }
+  .page-content { padding: 20px; gap: 20px; }
+  .hero-body { padding: 32px 24px; }
+  .filter-float { right: 16px; left: 16px; max-width: none; }
 }
 </style>
