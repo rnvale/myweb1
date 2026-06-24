@@ -1,25 +1,20 @@
 <template>
   <div class="chart-container">
     <div ref="chartRef" class="chart"></div>
-    <div v-if="loading" class="loading-chart">
-      <div class="loading-spinner"></div>
-      <span>Loading 3D visualization...</span>
+    <div v-if="loading" class="chart-overlay">
+      <div class="spinner"></div>
+      <span>加载 3D 可视化</span>
     </div>
-    <div v-if="error" class="error-chart">
-      <span>Failed to load data</span>
+    <div v-if="!loading && noData" class="chart-overlay">
+      <span>暂无数据</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, onUnmounted } from 'vue'
-import * as echarts from 'echarts/core'
-import { ScatterChart } from 'echarts/charts'
-import { TooltipComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import * as echarts from 'echarts'
 import 'echarts-gl'
-
-echarts.use([ScatterChart, TooltipComponent, CanvasRenderer])
 
 const props = defineProps<{
   sentimentFilter: string
@@ -28,140 +23,116 @@ const props = defineProps<{
 
 const chartRef = ref<HTMLElement>()
 const loading = ref(true)
-const error = ref(false)
+const noData = ref(false)
 let chartInstance: echarts.ECharts | null = null
-let resizeHandler: (() => void) | null = null
+let resizeTimer: number | null = null
 
 function initChart() {
   if (!chartRef.value) return
+  if (chartInstance) chartInstance.dispose()
   chartInstance = echarts.init(chartRef.value)
-  resizeHandler = () => chartInstance?.resize()
-  window.addEventListener('resize', resizeHandler)
   fetchData()
 }
 
 async function fetchData() {
   if (!chartInstance) return
   loading.value = true
-  error.value = false
+  noData.value = false
   try {
-    const res = await fetch('https://myweb-bwk2.onrender.com/api/aspect_stats')
-    const json = await res.json()
-    const items = json.data || json || []
-
-    if (items.length === 0) {
-      chartInstance.setOption({
-        title: { text: 'No data available', left: 'center', top: 'center', textStyle: { color: '#94a3b8', fontSize: 14 } }
-      })
+    // 用已有的 /api/aspect_sentiment（不用 /api/aspect_stats 因为那个后端不可用）
+    const res = await fetch('https://myweb-bwk2.onrender.com/api/aspect_sentiment')
+    const items = await res.json()
+    if (!Array.isArray(items) || items.length === 0) {
+      noData.value = true
       return
     }
 
-    // Map aspects to numeric coordinates for 3D
-    const aspects = items.map((item: any) => item.aspect || item.category || item._id)
-    const data3d = items.map((item: any, i: number) => {
+    const mapped = items.map((item: any, i: number) => {
       const pos = item.positive ?? 0
       const neg = item.negative ?? 0
       const total = pos + neg
-      const rate = total > 0 ? (pos / total) : 0.5
+      const rate = total > 0 ? pos / total : 0.5
       return {
-        name: aspects[i],
-        value: [rate * 5, i, total],
-        positive: pos,
-        negative: neg,
-        total,
-        rate
+        name: item.aspect || (typeof item._id === 'string' ? item._id : ''),
+        value: [i, rate * 10, total],
+        positive: pos, negative: neg, rate
       }
     })
 
     chartInstance.setOption({
       tooltip: {
         formatter: (p: any) => {
-          const d = data3d[p.dataIndex]
+          const d = mapped[p.dataIndex]
           if (!d) return ''
-          return `<strong>${d.name}</strong><br/>Positive: ${d.positive}<br/>Negative: ${d.negative}<br/>Positive Rate: ${(d.rate * 100).toFixed(1)}%`
+          return `<strong>${d.name}</strong><br/>正面: ${d.positive}<br/>负面: ${d.negative}<br/>正面率: ${(d.rate*100).toFixed(1)}%`
         },
         backgroundColor: 'rgba(255,255,255,0.95)',
         borderColor: '#e2e8f0',
         textStyle: { color: '#0f172a', fontSize: 12 }
       },
       grid3D: {
-        viewControl: {
-          autoRotate: true,
-          autoRotateSpeed: 10,
-          distance: 150
-        },
-        boxWidth: 60,
-        boxHeight: 60,
-        boxDepth: 60,
-        axisPointer: { show: false }
+        viewControl: { autoRotate: true, autoRotateSpeed: 6, distance: 140 },
+        boxWidth: 60, boxHeight: 60, boxDepth: 60
       },
-      xAxis3D: {
-        name: 'Positive Rate',
-        type: 'value',
-        min: 0,
-        max: 5,
-        axisLabel: { color: '#94a3b8', fontSize: 10 },
-        nameTextStyle: { color: '#94a3b8', fontSize: 11 }
-      },
-      yAxis3D: {
-        name: 'Aspect',
-        type: 'category',
-        data: aspects,
-        axisLabel: { color: '#94a3b8', fontSize: 9, interval: 0 },
-        nameTextStyle: { color: '#94a3b8', fontSize: 11 }
-      },
-      zAxis3D: {
-        name: 'Volume',
-        type: 'value',
-        axisLabel: { color: '#94a3b8', fontSize: 10 },
-        nameTextStyle: { color: '#94a3b8', fontSize: 11 }
-      },
+      xAxis3D: { name: 'Index', type: 'value', axisLabel: { show: false }, axisLine: { show: false }, splitLine: { show: false } },
+      yAxis3D: { name: 'Positive Rate', type: 'value', max: 10, axisLabel: { color: '#94a3b8', fontSize: 10 } },
+      zAxis3D: { name: 'Volume', type: 'value', axisLabel: { color: '#94a3b8', fontSize: 10 } },
       series: [{
         type: 'scatter3D',
-        data: data3d.map(d => d.value),
-        symbolSize: (val: number[]) => Math.max(6, Math.sqrt(val[2] ?? 0) * 2),
+        data: mapped.map(d => d.value),
+        symbolSize: (val: number[]) => Math.max(5, Math.sqrt(val[2] || 0) * 1.8),
         itemStyle: {
-          color: (params: any) => {
-            const d = data3d[params.dataIndex]
+          color: (p: any) => {
+            const d = mapped[p.dataIndex]
             if (!d) return '#94a3b8'
             if (d.rate > 0.6) return '#16a34a'
             if (d.rate > 0.4) return '#f59e0b'
             return '#dc2626'
           },
-          opacity: 0.8,
-          borderWidth: 0
+          opacity: 0.78
         },
         emphasis: {
           itemStyle: { opacity: 1 },
-          label: { show: true, formatter: (p: any) => data3d[p.dataIndex]?.name || '', fontSize: 12 }
+          label: { show: true, formatter: (p: any) => mapped[p.dataIndex]?.name || '', fontSize: 11 }
         }
       }]
     })
   } catch (e) {
-    console.error('BubbleChart3D fetch error:', e)
-    error.value = true
+    console.error('BubbleChart3D:', e)
+    noData.value = true
   } finally {
     loading.value = false
   }
 }
 
-onMounted(() => initChart())
+const handleResize = () => {
+  if (resizeTimer) clearTimeout(resizeTimer)
+  resizeTimer = window.setTimeout(() => chartInstance?.resize(), 150)
+}
+
+onMounted(() => {
+  initChart()
+  window.addEventListener('resize', handleResize)
+})
+
 onUnmounted(() => {
-  if (resizeHandler) window.removeEventListener('resize', resizeHandler)
+  window.removeEventListener('resize', handleResize)
+  if (resizeTimer) clearTimeout(resizeTimer)
   chartInstance?.dispose()
 })
+
 watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
 </script>
 
 <style scoped>
 .chart-container { width: 100%; height: 380px; position: relative; }
 .chart { width: 100%; height: 100%; }
-.loading-chart, .error-chart {
+.chart-overlay {
   position: absolute; inset: 0; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 8px;
-  color: #94a3b8; font-size: 13px; background: white;
+  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
 }
-.loading-spinner {
+.spinner {
   width: 20px; height: 20px; border: 2px solid #e2e8f0;
   border-top-color: #0066FF; border-radius: 50%; animation: spin 0.6s linear infinite;
 }
