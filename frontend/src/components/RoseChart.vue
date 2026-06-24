@@ -8,13 +8,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import * as echarts from 'echarts/core'
-import { PieChart } from 'echarts/charts'
-import { TooltipComponent, LegendComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
+import * as echarts from 'echarts'
 import http from '../http'
 
-echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer])
+echarts.use([echarts.PieChart, echarts.TooltipComponent, echarts.LegendComponent])
 
 const props = defineProps<{
   sentimentFilter: string

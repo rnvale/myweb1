@@ -7,13 +7,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import * as echarts from 'echarts/core'
-import { HeatmapChart } from 'echarts/charts'
-import { TooltipComponent, GridComponent, VisualMapComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
+import * as echarts from 'echarts'
 import http from '../http'
 
-echarts.use([HeatmapChart, TooltipComponent, GridComponent, VisualMapComponent, CanvasRenderer])
+echarts.use([echarts.HeatmapChart, echarts.TooltipComponent, echarts.GridComponent, echarts.VisualMapComponent])
 
 const props = defineProps<{
   sentimentFilter: string
