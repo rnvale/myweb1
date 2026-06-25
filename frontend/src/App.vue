@@ -406,4 +406,3 @@ onMounted(async () => {
   window.addEventListener("scroll", onScroll)
 })
 </script>
-<style>@import url(./assets/app.css);</style>
