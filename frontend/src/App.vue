@@ -409,7 +409,8 @@ onMounted(async () => {
 
 <style>
 /* ── Reset ── */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{color-scheme:light}
+*,:before,:after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   font-family:"Geist","Inter",-apple-system,BlinkMacSystemFont,sans-serif;
@@ -625,4 +626,64 @@ body{
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .card{
   background:#fff;border:1px solid rgba(0,0,0,0.04);
-  border-radius:12px;overflo
+  border-radius:12px;overflow:hidden;transition:all .25s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.02);position:relative;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(8,145,178,0.25),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.card:hover::before{opacity:1}
+.card:hover{
+  border-color:rgba(0,0,0,0.07);
+  box-shadow:0 8px 24px rgba(0,0,0,0.04);transform:translateY(-1px);
+}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px 0}
+.card-title{font-size:14px;font-weight:600;color:#0f172a}
+.card-desc{font-size:11px;color:#94a3b8;margin:3px 0 0;line-height:1.5}
+.card-body{padding:6px 0}
+
+/* ── Footer ── */
+.footer{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 36px;border-top:1px solid #e2e8f0;
+  font-size:12px;color:#94a3b8;
+}
+
+/* ── Filter Dock ── */
+.filter-dock{position:fixed;top:16px;right:28px;z-index:200}
+
+/* ── Back to Top ── */
+.top-btn{
+  position:fixed;bottom:28px;right:28px;z-index:300;
+  width:36px;height:36px;border-radius:50%;
+  background:#fff;border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:#64748b;transition:all .15s;font-family:inherit;
+}
+.top-btn:hover{background:#f1f5f9;color:#0891b2;transform:translateY(-2px)}
+.top-btn svg{width:16px;height:16px}
+
+/* ── Responsive ── */
+@media(max-width:1100px){
+  .grid-2{grid-template-columns:1fr}
+  .mag-section{grid-template-columns:1fr}
+  .mag-image{min-height:200px}
+}
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .page{padding:0}
+  .hero-content{padding:36px 20px 28px}
+  .content{padding:20px 16px 36px}
+  .metrics-bar{flex-wrap:wrap;padding:14px 8px}
+  .mb-item{padding:8px 12px;min-width:40%}
+  .mb-divider{display:none}
+  .hero-stats{flex-wrap:wrap;gap:8px;padding:14px 16px}
+  .hs-item{padding:0 16px;flex:1;min-width:80px}
+  .hs-divider{display:none}
+  .hs-num{font-size:22px}
+  .footer{flex-direction:column;gap:4px;padding:14px 16px}
+  .filter-dock{right:16px;
