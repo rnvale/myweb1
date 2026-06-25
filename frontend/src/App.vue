@@ -107,7 +107,7 @@
     <div class="floating-filter"><FilterBar v-model:sentimentFilter="sf" v-model:aspectFilter="af"/></div>
 
     <!-- Back to top -->
-    <button v-if="showTop" class="top-btn" @click="window.scrollTo({top:0,behavior:'smooth'})">
+    <button v-if="showTop" class="top-btn" @click="scrollToTop">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
     </button>
   </div>
@@ -140,6 +140,13 @@ const sf = ref('全部')
 const af = ref('全部')
 const showTop = ref(false)
 
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+onMounted(() => {
+}
+
 const total = 11321, pos = 5310, neg = 5291
 const posPct = computed(() => ((pos / total) * 100).toFixed(1))
 
@@ -159,8 +166,6 @@ onMounted(() => {
   const onScroll = () => { showTop.value = window.scrollY > 400 }
   window.addEventListener('scroll', onScroll)
 })
-
-const win = window as any
 </script>
 
 <style>
@@ -281,6 +286,4 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
   .hero-h1{font-size:26px}.hero-stats{flex-direction:column;gap:12px;align-items:flex-start}
   .sep{display:none}
   .content{padding:20px}.hero-body{padding:32px 24px}
-  .floating-filter{right:16px;left:16px;max-width:none}
-}
-</style>
+  .floating-filter{righ
