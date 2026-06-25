@@ -57,7 +57,7 @@ const fetchDataAndDraw = async () => {
   loading.value = true
   try {
     const filters = {
-      sentiment: props.sentimentFilter === '全部' ? 'all' : props.sentimentFilter,
+      sentiment: props.sentimentFilter === '全部' ? 'all' : (props.sentimentFilter === '正面' ? 'positive' : 'negative'),
       category: props.aspectFilter === '全部' ? 'all' : props.aspectFilter
     }
     const res = await http.post('/filtered_top_apps', filters)

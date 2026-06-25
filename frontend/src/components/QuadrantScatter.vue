@@ -49,7 +49,11 @@ const fetchDataAndDraw = async () => {
   if (!chartRef.value) return
   loading.value = true
   try {
-    const res = await http.get('/quadrant_scatter')
+    const filters = {
+      sentiment: props.sentimentFilter === '全部' ? 'all' : (props.sentimentFilter === '正面' ? 'positive' : 'negative'),
+      category: props.aspectFilter === '全部' ? 'all' : props.aspectFilter
+    }
+    const res = await http.post('/filtered_quadrant_scatter', filters)
     const data = res.data as AppData[]
     if (data && data.length > 0) drawChart(data)
   } catch (error) {
@@ -94,7 +98,7 @@ const drawChart = (data: AppData[]) => {
       textStyle: { color: '#0f172a' },
       formatter: (params: any) => {
         const d = params.data
-        return `<strong>${d.name}</strong><br/>评分: ${d.rating} 星<br/>评论数: ${d.reviews}<br/>正面率: ${(d.positiveRate || 0).toFixed(1)}%`
+        return '<strong>' + d.name + '</strong><br/>评分: ' + d.rating + ' 星<br/>评论数: ' + d.reviews + '<br/>正面率: ' + (d.positiveRate || 0).toFixed(1) + '%'
       }
     },
     grid: { left: '8%', right: '10%', top: '5%', bottom: '8%', containLabel: true },
@@ -110,7 +114,7 @@ const drawChart = (data: AppData[]) => {
       name: '评论数量',
       nameLocation: 'middle', nameGap: 40,
       min: yMin, max: yMax,
-      axisLabel: { color: '#94a3b8', fontSize: 11, formatter: (v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${v}` },
+      axisLabel: { color: '#94a3b8', fontSize: 11, formatter: (v: number) => v >= 1000 ? (v / 1000).toFixed(1) + 'k' : '' + v },
       splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } },
       axisLine: { lineStyle: { color: '#e2e8f0' } }
     },
@@ -142,7 +146,7 @@ const drawChart = (data: AppData[]) => {
         silent: true, symbol: 'none',
         lineStyle: { color: '#cbd5e1', type: 'solid', width: 1 },
         data: [
-          { xAxis: midRating, label: { formatter: `中值 ${midRating}`, color: '#94a3b8', fontSize: 9 } },
+          { xAxis: midRating, label: { formatter: '中值 ' + midRating, color: '#94a3b8', fontSize: 9 } },
           { yAxis: midReviews, label: { formatter: '', color: '#94a3b8', fontSize: 9 } }
         ]
       }

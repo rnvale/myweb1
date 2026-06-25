@@ -509,6 +509,39 @@ def get_aspect_stats():
         })
     return jsonify({'data': result})
 
+
+
+@app.route('/api/filtered_quadrant_scatter', methods=['POST'])
+def get_filtered_quadrant_scatter():
+    """支持筛选的四象限散点图"""
+    filters = request.json
+    filtered_df = df.copy()
+
+    if filters.get('sentiment') and filters.get('sentiment') != 'all':
+        filtered_df = filtered_df[filtered_df['sentiment'] == filters['sentiment']]
+
+    if filters.get('category') and filters.get('category') != 'all':
+        filtered_df = filtered_df[filtered_df['category'] == filters['category']]
+
+    valid_df = filtered_df[filtered_df['rating'].notna()]
+    result = []
+    for app in valid_df['app'].unique():
+        if pd.isna(app):
+            continue
+        app_df = valid_df[valid_df['app'] == app]
+        avg_rating = app_df['rating'].mean()
+        total_reviews = len(app_df)
+        positive_rate = len(app_df[app_df['sentiment'] == 'positive']) / total_reviews * 100
+
+        result.append({
+            'app': app,
+            'avg_rating': round(avg_rating, 2),
+            'total_reviews': total_reviews,
+            'positive_rate': round(positive_rate, 1)
+        })
+
+    return jsonify(result)
+
 if __name__ == '__main__':
     import os
     # 获取 Render 分配的端口，如果没有则使用 5000

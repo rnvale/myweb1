@@ -94,11 +94,11 @@ const emitChange = () => {
 
 <style scoped>
 .filter-panel {
-  background: white;
+  background: #fff;
   border: 1px solid rgba(0,0,0,0.06);
   border-radius: 12px;
   padding: 10px 14px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 
 .filter-row {
@@ -124,7 +124,7 @@ const emitChange = () => {
 
 .segmented-control {
   display: flex;
-  background: #f1f5f9;
+  background: #f1f4f9;
   border-radius: 8px;
   padding: 2px;
   gap: 2px;
@@ -144,19 +144,19 @@ const emitChange = () => {
 }
 
 .seg-btn:hover { color: #0f172a; }
-.seg-btn.active { background: white; color: #2563eb; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.seg-btn.seg-more { color: #2563eb; font-weight: 600; }
+.seg-btn.active { background: #fff; color: #0891b2; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.seg-btn.seg-more { color: #0891b2; font-weight: 600; }
 
 .more-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   margin-top: 4px;
-  background: white;
+  background: #fff;
   border: 1px solid rgba(0,0,0,0.06);
   border-radius: 8px;
   padding: 4px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -174,8 +174,8 @@ const emitChange = () => {
   text-align: left;
 }
 
-.more-item:hover { background: #f1f5f9; color: #0f172a; }
-.more-item.active { color: #2563eb; background: rgba(37,99,235,0.06); }
+.more-item:hover { background: #f1f4f9; color: #0f172a; }
+.more-item.active { color: #0891b2; background: rgba(8,145,178,0.06); }
 
 .filter-group { position: relative; }
 

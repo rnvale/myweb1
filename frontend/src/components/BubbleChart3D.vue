@@ -25,8 +25,6 @@ const LABEL_MAP: Record<string, string> = {
   'enjoyability': '娱乐性', 'learnability': '易学性', 'aesthetics': '美观性'
 }
 
-const COLORS = ['#2563eb', '#16a34a', '#dc2626', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#14b8a6', '#a855f7', '#0ea5e9']
-
 function initChart() {
   if (!chartRef.value) return
   if (chartInstance) chartInstance.dispose()
@@ -38,65 +36,114 @@ async function fetchData() {
   if (!chartInstance) return
   loading.value = true; noData.value = false
   try {
-    const res = await http.get('/aspect_sentiment')
+    const filters = {
+      sentiment: props.sentimentFilter === '全部' ? 'all' : (props.sentimentFilter === '正面' ? 'positive' : 'negative'),
+      category: props.aspectFilter === '全部' ? 'all' : props.aspectFilter
+    }
+    const res = await http.post('/filtered_aspect_sentiment', filters)
     const items = res.data
     if (!Array.isArray(items) || items.length === 0) { noData.value = true; return }
 
-    const data = items.map((item: any, i: number) => {
-      const p = item.positive ?? 0, n = item.negative ?? 0, t = p + n, r = t > 0 ? p / t : 0.5
-      return { name: LABEL_MAP[item.aspect] || item.aspect, x: r * 100, y: i, size: t, p, n, r }
+    const names: string[] = []
+    // 纯数组 [正面率, 类别索引, 评论量_缩放]
+    const rawData: number[][] = []
+
+    items.forEach(function(item: any, i: number) {
+      var p = item.positive ?? 0
+      var n = item.negative ?? 0
+      var t = p + n
+      var rate = t > 0 ? p / t : 0.5
+      names.push(LABEL_MAP[item.aspect] || item.aspect || '未知')
+      // z 轴表示评论量的相对大小，用 sqrt 缩放但别太大
+      rawData.push([Math.round(rate * 100), i, Math.round(Math.sqrt(t) * 0.5)])
     })
 
     chartInstance.setOption({
-      tooltip: {
-        formatter: (p: any) => {
-          const d = data[p.dataIndex]
-          return d ? `<strong>${d.name}</strong><br/>正面: ${d.p}<br/>负面: ${d.n}<br/>正面率: ${(d.r*100).toFixed(1)}%` : ''
+      tooltip: {},
+      grid3D: {
+        boxWidth: 150,
+        boxHeight: 120,
+        boxDepth: 100,
+        viewControl: {
+          autoRotate: true,
+          autoRotateSpeed: 8,
+          distance: 250,
+          alpha: 20,
+          beta: 30
         },
-        backgroundColor: 'rgba(255,255,255,0.95)', borderColor: '#e2e8f0', textStyle: { color: '#0f172a' }
+        light: {
+          main: { intensity: 1.2, shadow: true },
+          ambient: { intensity: 0.5 }
+        }
       },
-      grid: { left: '12%', right: '8%', top: '10%', bottom: '10%', containLabel: true },
-      xAxis: {
-        type: 'value', name: '正面率', min: 0, max: 100,
+      xAxis3D: {
+        name: '正面率',
+        type: 'value',
+        min: 0, max: 100,
         axisLabel: { color: '#94a3b8', formatter: '{value}%' },
-        splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } },
         nameTextStyle: { color: '#94a3b8', fontSize: 11 }
       },
-      yAxis: {
-        type: 'category', data: data.map(d => d.name),
-        axisLabel: { color: '#64748b', fontSize: 11, fontWeight: 500 },
-        splitLine: { lineStyle: { color: '#f1f5f9' } }
+      yAxis3D: {
+        name: '方面类别',
+        type: 'category',
+        data: names,
+        axisLabel: { color: '#64748b', fontSize: 10 },
+        nameTextStyle: { color: '#94a3b8', fontSize: 11 }
+      },
+      zAxis3D: {
+        name: '评论量',
+        type: 'value',
+        axisLabel: { color: '#94a3b8' },
+        nameTextStyle: { color: '#94a3b8', fontSize: 11 }
+      },
+      visualMap: {
+        show: true,
+        min: 0, max: 100,
+        dimension: 0,
+        inRange: { color: ['#dc2626', '#f59e0b', '#16a34a'] },
+        textStyle: { color: '#94a3b8', fontSize: 10 },
+        calculable: true,
+        left: 10, bottom: 10,
+        orient: 'horizontal',
+        itemWidth: 12, itemHeight: 100
       },
       series: [{
-        type: 'scatter',
-        data: data.map(d => ({ value: [d.x, d.name, d.size], name: d.name })),
-        symbolSize: (val: any) => Math.max(8, Math.sqrt(val[2] || 0) * 1.5),
+        type: 'scatter3D',
+        data: rawData,
+        // symbolSize: z 轴值代表 sqrt(t)*0.5，乘据让范围在 10~35 之间
+        symbolSize: function(dataItem: any, params: any) {
+          var z = dataItem ? dataItem[2] : 1
+          return Math.max(10, Math.min(35, z * 3))
+        },
         itemStyle: {
-          color: (p: any) => {
-            const d = data[p.dataIndex]
-            return !d ? '#94a3b8' : d.r > 0.6 ? '#16a34a' : d.r > 0.4 ? '#f59e0b' : '#dc2626'
-          },
-          opacity: 0.7, borderColor: '#fff', borderWidth: 1
+          opacity: 0.85,
+          borderColor: '#ffffff',
+          borderWidth: 1
         },
         label: {
-          show: true, position: 'right', formatter: (p: any) => p.name,
-          color: '#64748b', fontSize: 10
+          show: true,
+          formatter: function(params: any) {
+            return params.dataIndex != null ? names[params.dataIndex] : ''
+          },
+          color: '#475569',
+          fontSize: 10,
+          position: 'top'
         },
         emphasis: {
-          itemStyle: { opacity: 1, shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.15)' },
-          label: { fontSize: 12, fontWeight: 600 }
+          itemStyle: { opacity: 1 },
+          label: { fontSize: 12, fontWeight: 700, color: '#0f172a' }
         }
       }]
     })
-  } catch (e) {
-    console.error('BubbleChart:', e)
+  } catch (e: any) {
+    console.error('BubbleChart3D:', e)
     noData.value = true
   } finally { loading.value = false }
 }
 
-onMounted(() => { initChart(); window.addEventListener('resize', () => chartInstance?.resize()) })
-onUnmounted(() => { chartInstance?.dispose(); window.removeEventListener('resize', () => chartInstance?.resize()) })
-watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
+onMounted(function() { initChart(); window.addEventListener('resize', function() { chartInstance?.resize() }) })
+onUnmounted(function() { chartInstance?.dispose(); window.removeEventListener('resize', function() { chartInstance?.resize() }) })
+watch(function() { return [props.sentimentFilter, props.aspectFilter] }, function() { fetchData() })
 </script>
 
 <style scoped>

@@ -46,7 +46,11 @@ async function fetchData() {
   loading.value = true
   noData.value = false
   try {
-    const res = await http.get('/aspect_sentiment')
+    const filters = {
+      sentiment: props.sentimentFilter === '全部' ? 'all' : (props.sentimentFilter === '正面' ? 'positive' : 'negative'),
+      category: props.aspectFilter === '全部' ? 'all' : props.aspectFilter
+    }
+    const res = await http.post('/filtered_aspect_sentiment', filters)
     const items = res.data
     if (!Array.isArray(items) || items.length === 0) {
       noData.value = true
@@ -64,7 +68,7 @@ async function fetchData() {
         formatter: '{b}: {c} 条 ({d}%)',
         backgroundColor: 'rgba(255,255,255,0.95)',
         borderColor: '#e2e8f0',
-        textStyle: { color: '#0f172a' }
+        textStyle: { color: '#0f172a', fontSize: 12 }
       },
       legend: {
         orient: 'vertical',
@@ -74,11 +78,12 @@ async function fetchData() {
       },
       series: [{
         type: 'pie',
-        roseType: 'area',
-        radius: ['18%', '72%'],
+        roseType: 'radius',
+        radius: ['15%', '75%'],
         center: ['40%', '50%'],
+        data: pieData,
         itemStyle: {
-          borderRadius: 6,
+          borderRadius: 4,
           borderColor: '#fff',
           borderWidth: 2,
           color: (p: any) => COLORS[p.dataIndex % COLORS.length]
@@ -86,7 +91,9 @@ async function fetchData() {
         label: {
           color: '#475569', fontSize: 11, fontWeight: 500,
           formatter: '{b}\n{c} 条'
-        }
+        },
+        animationDuration: 800,
+        animationEasing: 'cubicOut'
       }]
     })
   } catch (e) {
@@ -101,7 +108,6 @@ onMounted(() => { initChart(); window.addEventListener('resize', () => chartInst
 onUnmounted(() => { chartInstance?.dispose() })
 watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
 </script>
-
 <style scoped>
 .chart-container { width: 100%; height: 300px; position: relative; }
 .chart { width: 100%; height: 100%; }

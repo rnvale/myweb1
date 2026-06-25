@@ -1,8 +1,9 @@
-node_modules/
-dist/
+*.pyc
 *.timestamp-*-*.mjs
 .vscode/
-backend/venv/
 backend/__pycache__/
-*.pyc
+backend/venv/
+dist/
+frontend/node_modules_old/
 frontend/src/components/sed*
+node_modules/
