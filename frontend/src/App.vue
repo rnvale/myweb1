@@ -26,23 +26,23 @@
           </div>
           <div class="insight"><div class="insight-dot"></div><div class="insight-body"><span class="insight-hl">情感快照</span><p class="insight-p">整体正面评论占比 <strong>{{ posPct }}%</strong>，其中娱乐性、美观性和整体评价类别正面率最高，而可靠性和价格类别的负面反馈较多。</p></div></div>
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感仪表盘</h3><p class="panel-desc">正面评论占比实时监控</p></div><span class="tag tag-live">实时</span></div><div class="panel-bd"><SentimentGauge :sentiment-filter="sf" :aspect-filter="af"/></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分情感分析</h3><p class="panel-desc">各星级评论的情感分布</p></div><span class="tag">分布</span></div><div class="panel-bd"><RatingSentiment :sentiment-filter="sf" :aspect-filter="af"/></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感仪表盘</h3><p class="panel-desc">正面评论占比实时监控</p></div><span class="tag tag-live">实时</span></div><div class="panel-bd"><SentimentGauge></SentimentGauge></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分情感分析</h3><p class="panel-desc">各星级评论的情感分布</p></div><span class="tag">分布</span></div><div class="panel-bd"><RatingSentiment></RatingSentiment></div></div>
           </div>
           <div class="banner" style="background-image:url(/img/bg-data.jpg)"><div class="banner-mask"></div><div class="banner-body"><span class="banner-hl">领域对比分析</span><p class="banner-p">从生产力工具到娱乐应用，每个领域的情感模式截然不同——数据揭示了功能价值与情感体验之间的深层关联。</p></div></div>
-          <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">各领域情感对比</h3><p class="panel-desc">不同App领域的正面率与评论量对比</p></div></div><div class="panel-bd"><DomainCompare :sentiment-filter="sf" :aspect-filter="af"/></div></div>
+          <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">各领域情感对比</h3><p class="panel-desc">不同App领域的正面率与评论量对比</p></div></div><div class="panel-bd"><DomainCompare></DomainCompare></div></div>
         </div>
       </section>
       <section v-if="view === 'sentiment'">
         <div class="hero hero-sm" style="background-image:url(/img/hero-charts.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">情感</div><h1 class="hero-h1">情感分析</h1><p class="hero-p">评分与方面的情感关联深度洞察</p></div></div>
         <div class="content">
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感热力图</h3><p class="panel-desc">评分 × 方面类别的情感矩阵——绿色代表正面率高</p></div></div><div class="panel-bd"><EmotionHeatmap :sentiment-filter="sf" :aspect-filter="af"/></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">3D 气泡图</h3><p class="panel-desc">方面类别的立体对比——球体大小=评论量，颜色=正面率</p></div></div><div class="panel-bd"><BubbleChart3D :sentiment-filter="sf" :aspect-filter="af"/></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感热力图</h3><p class="panel-desc">评分 × 方面类别的情感矩阵——绿色代表正面率高</p></div></div><div class="panel-bd"><EmotionHeatmap></EmotionHeatmap></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">3D 气泡图</h3><p class="panel-desc">方面类别的立体对比——球体大小=评论量，颜色=正面率</p></div></div><div class="panel-bd"><BubbleChart3D></BubbleChart3D></div></div>
           </div>
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评论长度关联分析</h3><p class="panel-desc">短评论倾向正面，长评论蕴含更多复杂情感</p></div></div><div class="panel-bd"><LengthAnalysisChart :sentiment-filter="sf" :aspect-filter="af"/></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">高频词云</h3><p class="panel-desc">正负面评论中频繁出现的关键词</p></div></div><div class="panel-bd"><WordCloud :sentiment-filter="sf" :aspect-filter="af"/></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评论长度关联分析</h3><p class="panel-desc">短评论倾向正面，长评论蕴含更多复杂情感</p></div></div><div class="panel-bd"><LengthAnalysisChart></LengthAnalysisChart></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">高频词云</h3><p class="panel-desc">正负面评论中频繁出现的关键词</p></div></div><div class="panel-bd"><WordCloud></WordCloud></div></div>
           </div>
         </div>
       </section>
@@ -50,8 +50,8 @@
         <div class="hero hero-sm" style="background-image:url(/img/bg-data.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">挖掘</div><h1 class="hero-h1">方面挖掘</h1><p class="hero-p">评论中提及的方面类别分布与情感分析</p></div></div>
         <div class="content">
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">玫瑰图</h3><p class="panel-desc">方面类别评论量分布——花瓣越宽评论越多</p></div></div><div class="panel-bd"><RoseChart :sentiment-filter="sf" :aspect-filter="af"/></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">热门 App 情感对比</h3><p class="panel-desc">评论量最高的应用情感表现</p></div></div><div class="panel-bd"><TopAppsChart :sentiment-filter="sf" :aspect-filter="af"/></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">玫瑰图</h3><p class="panel-desc">方面类别评论量分布——花瓣越宽评论越多</p></div></div><div class="panel-bd"><RoseChart></RoseChart></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">热门 App 情感对比</h3><p class="panel-desc">评论量最高的应用情感表现</p></div></div><div class="panel-bd"><TopAppsChart></TopAppsChart></div></div>
           </div>
         </div>
       </section>
@@ -59,14 +59,14 @@
         <div class="hero hero-sm" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">排行</div><h1 class="hero-h1">App 排行</h1><p class="hero-p">应用评分排行榜与竞争分析</p></div></div>
         <div class="content">
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分排行榜</h3><p class="panel-desc">Top 12 应用按平均评分排名</p></div></div><div class="panel-bd"><AppRatings :sentiment-filter="sf" :aspect-filter="af"/></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">四象限分析</h3><p class="panel-desc">评分 × 评论量矩阵——明星、潜力、问题、边缘一目了然</p></div></div><div class="panel-bd"><QuadrantScatter :sentiment-filter="sf" :aspect-filter="af"/></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分排行榜</h3><p class="panel-desc">Top 12 应用按平均评分排名</p></div></div><div class="panel-bd"><AppRatings></AppRatings></div></div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">四象限分析</h3><p class="panel-desc">评分 × 评论量矩阵——明星、潜力、问题、边缘一目了然</p></div></div><div class="panel-bd"><QuadrantScatter></QuadrantScatter></div></div>
           </div>
         </div>
       </section>
       <footer class="footer"><span>AppInsight v2.0</span><span>AWARE · 11,321 条评论</span></footer>
     </main>
-    <div class="floating-filter"><FilterBar v-model:sentimentFilter="sf" v-model:aspectFilter="af"/></div>
+    <div class="floating-filter"><FilterBar></FilterBar></div>
     <button v-if="showTop" class="top-btn" @click="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
   </div>
 </template>
