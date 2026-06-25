@@ -1,75 +1,75 @@
 <template>
   <div class="app-root">
-    <div class="ambient"><div class="ambient-orb ambient-orb-1"></div><div class="ambient-orb ambient-orb-2"></div></div>
+    <div class="ambient"><div class="ambient-orb ambient-orb-1"><div class="ambient-orb ambient-orb-2">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <div class="brand-check"><svg viewBox="0 0 32 32" fill="none"><rect x="2" y="2" width="28" height="28" rx="8" fill="#2563eb"/><path d="M10 16l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="brand-text"><span class="brand-name">AppInsight</span><span class="brand-ver">v2.0</span></div>
-      </div>
+        <div class="brand-check"><svg viewBox="0 0 32 32" fill="none"><rect x="2" y="2" width="28" height="28" rx="8" fill="#2563eb"/><path d="M10 16l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="brand-text"><span class="brand-name">AppInsight<span class="brand-ver">v2.0
+      
       <nav class="nav">
         <button v-for="item in nav" :key="item.key" class="nav-btn" :class="{active: view === item.key}" @click="view = item.key">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path :d="item.icon"/></svg>
-          <span>{{ item.label }}</span>
-        </button>
-      </nav>
-      <div class="sidebar-foot"><div class="sf-label">数据源</div><div class="sf-value">AWARE · 11,321 条评论</div></div>
-    </aside>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path :d="item.icon"/>
+          <span>{{ item.label }}
+        
+      
+      <div class="sidebar-foot"><div class="sf-label"><div class="sf-value">AWARE  11,321 
+    
     <main class="main">
       <section v-if="view === 'dashboard'">
-        <div class="hero" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">概览</div><h1 class="hero-h1">App 智能分析仪表盘</h1><p class="hero-p">基于 AWARE 数据集对 11,321 条应用评论进行实时情感分析</p><div class="hero-stats"><div class="hero-stat"><span class="hero-num">{{ anim.total }}</span><span class="hero-lbl">评论总数</span></div><div class="hero-stat sep"></div><div class="hero-stat"><span class="hero-num hero-grn">{{ anim.pos }}</span><span class="hero-lbl">正面</span></div><div class="hero-stat sep"></div><div class="hero-stat"><span class="hero-num hero-red">{{ anim.neg }}</span><span class="hero-lbl">负面</span></div></div></div></div>
+        <div class="hero" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"><div class="hero-body"><div class="hero-tag"><h1 class="hero-h1">App <p class="hero-p"> AWARE  11,321 <div class="hero-stats"><div class="hero-stat"><span class="hero-num">{{ anim.total }}<span class="hero-lbl"><div class="hero-stat sep"><div class="hero-stat"><span class="hero-num hero-grn">{{ anim.pos }}<span class="hero-lbl"><div class="hero-stat sep"><div class="hero-stat"><span class="hero-num hero-red">{{ anim.neg }}<span class="hero-lbl">
         <div class="content">
           <div class="kpi-row">
-            <div class="kpi-card"><div class="kpi-ico kpi-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h2m0 0h2m-2 0v2m0-2V9"/><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg></div><div class="kpi-body"><span class="kpi-label">平均评分</span><span class="kpi-val">3.8 <small>/ 5.0</small></span><div class="kpi-stars"><span v-for="n in 5" :key="n" class="star" :class="n <= 4 ? 'on' : ''">★</span></div></div></div>
-            <div class="kpi-card"><div class="kpi-ico kpi-em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20"/></svg></div><div class="kpi-body"><span class="kpi-label">正面率</span><span class="kpi-val kpi-text-grn">{{ posPct }}<small>%</small></span><div class="bar"><div class="bar-fill bar-grn" :style="{width: posPct+'%'}"></div></div></div></div>
-            <div class="kpi-card"><div class="kpi-ico kpi-org"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="kpi-body"><span class="kpi-label">方面类别</span><span class="kpi-val">12 <small>类</small></span><span class="kpi-sub">涵盖可用性、价格、性能等</span></div></div>
-            <div class="kpi-card"><div class="kpi-ico kpi-purp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div class="kpi-body"><span class="kpi-label">数据来源</span><span class="kpi-val">AWARE</span><span class="kpi-sub">学术研究数据集 v2.1</span></div></div>
-          </div>
-          <div class="insight"><div class="insight-dot"></div><div class="insight-body"><span class="insight-hl">情感快照</span><p class="insight-p">整体正面评论占比 <strong>{{ posPct }}%</strong>，其中娱乐性、美观性和整体评价类别正面率最高，而可靠性和价格类别的负面反馈较多。</p></div></div>
+            <div class="kpi-card"><div class="kpi-ico kpi-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h2m0 0h2m-2 0v2m0-2V9"/><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><div class="kpi-body"><span class="kpi-label"><span class="kpi-val">3.8 <small>/ 5.0<div class="kpi-stars"><span v-for="n in 5" :key="n" class="star" :class="n <= 4 ? 'on' : ''">
+            <div class="kpi-card"><div class="kpi-ico kpi-em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20"/><div class="kpi-body"><span class="kpi-label"><span class="kpi-val kpi-text-grn">{{ posPct }}<small>%<div class="bar"><div class="bar-fill bar-grn" :style="{width: posPct+'%'}">
+            <div class="kpi-card"><div class="kpi-ico kpi-org"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><div class="kpi-body"><span class="kpi-label"><span class="kpi-val">12 <small><span class="kpi-sub">
+            <div class="kpi-card"><div class="kpi-ico kpi-purp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/><div class="kpi-body"><span class="kpi-label"><span class="kpi-val">AWARE<span class="kpi-sub"> v2.1
+          
+          <div class="insight"><div class="insight-dot"><div class="insight-body"><span class="insight-hl"><p class="insight-p"> <strong>{{ posPct }}%
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感仪表盘</h3><p class="panel-desc">正面评论占比实时监控</p></div><span class="tag tag-live">实时</span></div><div class="panel-bd"><SentimentGauge></SentimentGauge></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分情感分析</h3><p class="panel-desc">各星级评论的情感分布</p></div><span class="tag">分布</span></div><div class="panel-bd"><RatingSentiment></RatingSentiment></div></div>
-          </div>
-          <div class="banner" style="background-image:url(/img/bg-data.jpg)"><div class="banner-mask"></div><div class="banner-body"><span class="banner-hl">领域对比分析</span><p class="banner-p">从生产力工具到娱乐应用，每个领域的情感模式截然不同——数据揭示了功能价值与情感体验之间的深层关联。</p></div></div>
-          <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">各领域情感对比</h3><p class="panel-desc">不同App领域的正面率与评论量对比</p></div></div><div class="panel-bd"><DomainCompare></DomainCompare></div></div>
-        </div>
-      </section>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc"><span class="tag tag-live"><div class="panel-bd">
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc"><span class="tag"><div class="panel-bd">
+          
+          <div class="banner" style="background-image:url(/img/bg-data.jpg)"><div class="banner-mask"><div class="banner-body"><span class="banner-hl"><p class="banner-p">
+          <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc">App<div class="panel-bd">
+        
+      
       <section v-if="view === 'sentiment'">
-        <div class="hero hero-sm" style="background-image:url(/img/hero-charts.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">情感</div><h1 class="hero-h1">情感分析</h1><p class="hero-p">评分与方面的情感关联深度洞察</p></div></div>
+        <div class="hero hero-sm" style="background-image:url(/img/hero-charts.jpg)"><div class="hero-mask"><div class="hero-body"><div class="hero-tag"><h1 class="hero-h1"><p class="hero-p">
         <div class="content">
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">情感热力图</h3><p class="panel-desc">评分 × 方面类别的情感矩阵——绿色代表正面率高</p></div></div><div class="panel-bd"><EmotionHeatmap></EmotionHeatmap></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">3D 气泡图</h3><p class="panel-desc">方面类别的立体对比——球体大小=评论量，颜色=正面率</p></div></div><div class="panel-bd"><BubbleChart3D></BubbleChart3D></div></div>
-          </div>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc">  <div class="panel-bd">
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">3D <p class="panel-desc">==<div class="panel-bd">
+          
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评论长度关联分析</h3><p class="panel-desc">短评论倾向正面，长评论蕴含更多复杂情感</p></div></div><div class="panel-bd"><LengthAnalysisChart></LengthAnalysisChart></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">高频词云</h3><p class="panel-desc">正负面评论中频繁出现的关键词</p></div></div><div class="panel-bd"><WordCloud></WordCloud></div></div>
-          </div>
-        </div>
-      </section>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc"><div class="panel-bd">
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc"><div class="panel-bd">
+          
+        
+      
       <section v-if="view === 'aspects'">
-        <div class="hero hero-sm" style="background-image:url(/img/bg-data.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">挖掘</div><h1 class="hero-h1">方面挖掘</h1><p class="hero-p">评论中提及的方面类别分布与情感分析</p></div></div>
+        <div class="hero hero-sm" style="background-image:url(/img/bg-data.jpg)"><div class="hero-mask"><div class="hero-body"><div class="hero-tag"><h1 class="hero-h1"><p class="hero-p">
         <div class="content">
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">玫瑰图</h3><p class="panel-desc">方面类别评论量分布——花瓣越宽评论越多</p></div></div><div class="panel-bd"><RoseChart></RoseChart></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">热门 App 情感对比</h3><p class="panel-desc">评论量最高的应用情感表现</p></div></div><div class="panel-bd"><TopAppsChart></TopAppsChart></div></div>
-          </div>
-        </div>
-      </section>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc"><div class="panel-bd">
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"> App <p class="panel-desc"><div class="panel-bd">
+          
+        
+      
       <section v-if="view === 'rankings'">
-        <div class="hero hero-sm" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"></div><div class="hero-body"><div class="hero-tag">排行</div><h1 class="hero-h1">App 排行</h1><p class="hero-p">应用评分排行榜与竞争分析</p></div></div>
+        <div class="hero hero-sm" style="background-image:url(/img/hero-analytics.jpg)"><div class="hero-mask"><div class="hero-body"><div class="hero-tag"><h1 class="hero-h1">App <p class="hero-p">
         <div class="content">
           <div class="grid-2">
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">评分排行榜</h3><p class="panel-desc">Top 12 应用按平均评分排名</p></div></div><div class="panel-bd"><AppRatings></AppRatings></div></div>
-            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title">四象限分析</h3><p class="panel-desc">评分 × 评论量矩阵——明星、潜力、问题、边缘一目了然</p></div></div><div class="panel-bd"><QuadrantScatter></QuadrantScatter></div></div>
-          </div>
-        </div>
-      </section>
-      <footer class="footer"><span>AppInsight v2.0</span><span>AWARE · 11,321 条评论</span></footer>
-    </main>
-    <div class="floating-filter"><FilterBar></FilterBar></div>
-    <button v-if="showTop" class="top-btn" @click="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
-  </div>
-</template>
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc">Top 12 <div class="panel-bd">
+            <div class="panel"><div class="panel-hd"><div><h3 class="panel-title"><p class="panel-desc">  <div class="panel-bd">
+          
+        
+      
+      <footer class="footer"><span>AppInsight v2.0<span>AWARE  11,321 
+    
+    <div class="floating-filter">
+    <button v-if="showTop" class="top-btn" @click="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/>
+  
+
 
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from 'vue'
@@ -87,15 +87,15 @@ import AppRatings from './components/AppRatings.vue'
 import QuadrantScatter from './components/QuadrantScatter.vue'
 
 const nav = [
-  { key: 'dashboard', label: '总览', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { key: 'sentiment', label: '情感', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-  { key: 'aspects', label: '方面', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-  { key: 'rankings', label: '排行', icon: 'M9 5l7 7-7 7' }
+  { key: 'dashboard', label: '', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { key: 'sentiment', label: '', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { key: 'aspects', label: '', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+  { key: 'rankings', label: '', icon: 'M9 5l7 7-7 7' }
 ]
 
 const view = ref('dashboard')
-const sf = ref('全部')
-const af = ref('全部')
+const sf = ref('')
+const af = ref('')
 const showTop = ref(false)
 const total = 11321
 const pos = 5310
@@ -115,7 +115,7 @@ onMounted(() => {
   requestAnimationFrame(tick)
   window.addEventListener('scroll', () => { showTop.value = window.scrollY > 400 })
 })
-</script>
+
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -203,4 +203,4 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:#f
 .top-btn svg{width:18px;height:18px}
 @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.kpi-row{grid-template-columns:1fr}.hero-h1{font-size:26px}.hero-stats{flex-direction:column;gap:12px;align-items:flex-start}.sep{display:none}.content{padding:20px}.hero-body{padding:32px 24px}.floating-filter{right:16px;left:16px;max-width:none}}
-</style>
+
