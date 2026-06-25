@@ -5,3 +5,4 @@ dist/
 backend/venv/
 backend/__pycache__/
 *.pyc
+frontend/src/components/sed*
