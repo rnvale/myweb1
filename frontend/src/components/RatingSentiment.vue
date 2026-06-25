@@ -100,4 +100,8 @@ watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
 }
 .spinner {
   width: 20px; height: 20px; border: 2px solid #e2e8f0;
-  border-top-color: #0066FF; b
+  border-top-color: #0066FF; border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>

@@ -12,8 +12,6 @@ import * as echarts from 'echarts'
 import 'echarts-gl'
 import http from '../http'
 
-echarts.use([ScatterChart, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer])
-
 const props = defineProps<{ sentimentFilter: string; aspectFilter: string }>()
 const chartRef = ref<HTMLElement>()
 const loading = ref(true)
@@ -96,4 +94,23 @@ async function fetchData() {
   } finally { loading.value = false }
 }
 
-onMounted(() => { initChart(); window.addEventListener('resi
+onMounted(() => { initChart(); window.addEventListener('resize', () => chartInstance?.resize()) })
+onUnmounted(() => { chartInstance?.dispose(); window.removeEventListener('resize', () => chartInstance?.resize()) })
+watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
+</script>
+
+<style scoped>
+.chart-container { width: 100%; height: 300px; position: relative; }
+.chart { width: 100%; height: 100%; }
+.chart-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
+}
+.spinner {
+  width: 20px; height: 20px; border: 2px solid #e2e8f0;
+  border-top-color: #2563eb; border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>

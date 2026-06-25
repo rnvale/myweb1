@@ -92,4 +92,35 @@ async function fetchData() {
         data: heatmapData,
         label: {
           show: true, color: '#0f172a', fontSize: 11, fontWeight: 600,
-          formatter: (
+          formatter: (p: any) => (p.value[2] * 100).toFixed(0) + '%'
+        },
+        emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.15)' } }
+      }]
+    })
+  } catch (e) {
+    console.error('EmotionHeatmap:', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => initChart())
+onUnmounted(() => chartInstance?.dispose())
+watch(() => [props.sentimentFilter, props.aspectFilter], () => fetchData())
+</script>
+
+<style scoped>
+.chart-container { width: 100%; height: 300px; position: relative; }
+.chart { width: 100%; height: 100%; }
+.chart-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  color: #94a3b8; font-size: 13px; background: white; z-index: 2;
+}
+.spinner {
+  width: 20px; height: 20px; border: 2px solid #e2e8f0;
+  border-top-color: #2563eb; border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>

@@ -144,9 +144,6 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-onMounted(() => {
-}
-
 const total = 11321, pos = 5310, neg = 5291
 const posPct = computed(() => ((pos / total) * 100).toFixed(1))
 
@@ -286,4 +283,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
   .hero-h1{font-size:26px}.hero-stats{flex-direction:column;gap:12px;align-items:flex-start}
   .sep{display:none}
   .content{padding:20px}.hero-body{padding:32px 24px}
-  .floating-filter{righ
+  .floating-filter{right:16px;left:16px;max-width:none}
+}
+</style>
