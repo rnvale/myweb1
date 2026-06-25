@@ -39,16 +39,36 @@
         </nav>
       </div>
 
-      <div class="sidebar-footer">
-        <div class="sf-row">
-          <span class="sf-label">数据来源</span>
-          <span class="sf-value">AWARE 数据集</span>
-        </div>
-        <div class="sf-row">
-          <span class="sf-label">记录数</span>
-          <span class="sf-value">11,321 条评论</span>
-        </div>
-      </div>
+<div class="sidebar-footer">
+  <div class="sf-row">
+    <span class="sf-label">数据来源</span>
+    <span class="sf-value">AWARE 数据集</span>
+  </div>
+  <div class="sf-row">
+    <span class="sf-label">记录数</span>
+    <span class="sf-value">11,321 条评论</span>
+  </div>
+
+  <!-- 作者与 GitHub 链接 -->
+  <div class="sf-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12);">
+    <span class="sf-label">作者</span>
+    <span class="sf-value">RainVale</span>
+  </div>
+  <div class="sf-row" style="align-items: center;">
+    <span class="sf-label">GitHub</span>
+    <a href="https://github.com/rnvale/myweb1" target="_blank" rel="noopener noreferrer"
+       class="sf-value"
+       style="display: inline-flex; align-items: center; gap: 4px; color: inherit; text-decoration: none; transition: opacity 0.2s;"
+       onmouseover="this.style.opacity='0.7'"
+       onmouseout="this.style.opacity='1'">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px;" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.467-2.38 1.235-3.22-.135-.303-.535-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.045.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      @rnvale/myweb1
+    </a>
+  </div>
+</div>
+
     </aside>
 
     <!-- Main -->
