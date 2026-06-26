@@ -1,5 +1,10 @@
 <template>
-  <div class="app-root">
+  <!-- 3D 启动页 -->
+  <div v-if="showLanding" class="landing-wrapper">
+    <LandingPage3D @enter="enterApp" />
+  </div>
+  <!-- 主应用 -->
+  <div v-else class="app-root">
     <svg style="position:absolute;width:0;height:0" aria-hidden="true">
       <defs>
         <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -342,6 +347,20 @@
         </div>
       </section>
 
+      <!-- Mobile bottom nav -->
+      <nav class="mobile-nav" role="navigation" aria-label="移动端导航">
+        <button
+          v-for="(item, i) in nav"
+          :key="item.key"
+          class="mobile-nav-item"
+          :class="{ active: view === item.key }"
+          @click="view = item.key"
+        >
+          <svg class="mobile-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path :d="item.icon"/></svg>
+          <span class="mobile-nav-label">{{ item.label }}</span>
+        </button>
+      </nav>
+
       <footer class="footer">
         <span>AppInsight v2.0 情感分析系统</span>
         <span>AWARE 数据集 | 11,321 条评论</span>
@@ -372,6 +391,7 @@ import RoseChart from "./components/RoseChart.vue"
 import TopAppsChart from "./components/TopAppsChart.vue"
 import AppRatings from "./components/AppRatings.vue"
 import QuadrantScatter from "./components/QuadrantScatter.vue"
+import LandingPage3D from "./components/LandingPage3D.vue"
 
 const nav = [
   { key: "dashboard", label: "总览", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -388,9 +408,14 @@ const navIndex = computed(() => {
 })
 
 const view = ref("dashboard")
+const showLanding = ref(true)
 const sf = ref("全部")
 const af = ref("全部")
 const showTop = ref(false)
+
+function enterApp() {
+  showLanding.value = false
+}
 
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" })
 
